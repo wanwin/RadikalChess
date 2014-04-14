@@ -1,20 +1,20 @@
 package Model;
 
 public class Position {
-    private int file;
+    private int row;
     private int column;
-
-    public Position(int file, int column) {
-        this.file = file;
+    
+    public Position(int row, int column) {
+        this.row = row;
         this.column = column;
     }
 
-    public int getFile() {
-        return file;
+    public int getRow() {
+        return row;
     }
 
-    public void setFile(int file) {
-        this.file = file;
+    public void setRow(int row) {
+        this.row = row;
     }
 
     public int getColumn() {

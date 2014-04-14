@@ -1,23 +1,21 @@
 package Model;
 
-public class ChessPiece {
+public abstract class ChessPiece {
     private final String name;
-    private Movement movement;
+    private final Position position;
 
-    public ChessPiece(String name, Movement movement) {
+    public ChessPiece(String name, Position position) {
         this.name = name;
-        this.movement = movement;
+        this.position = position;
     }
 
     public String getName() {
         return name;
     }
 
-    public Movement getMovement() {
-        return movement;
+    public Position getPosition() {
+        return position;
     }
-
-    public void setMovement(Movement movement) {
-        this.movement = movement;
-    }
+    
+    public abstract Image loadImage();
 }
