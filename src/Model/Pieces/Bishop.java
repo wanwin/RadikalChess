@@ -9,9 +9,4 @@ public class Bishop extends ChessPiece {
     public Bishop(String name, Position position) {
         super(name, position);
     }
-
-    @Override
-    public Image loadImage() {
-        return null;
-    }
 }

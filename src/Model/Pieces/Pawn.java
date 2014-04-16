@@ -9,10 +9,4 @@ public class Pawn extends ChessPiece {
     public Pawn(String name, Position position) {
         super(name, position);
     }
-
-    @Override
-    public Image loadImage() {
-        return null;
-    }
-    
 }

@@ -9,9 +9,4 @@ public class King extends ChessPiece {
     public King(String name, Position position) {
         super(name, position);
     }
-
-    @Override
-    public Image loadImage() {
-        return null;
-    }
 }
