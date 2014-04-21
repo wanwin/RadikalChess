@@ -114,15 +114,6 @@ public class MainFrame extends JFrame {
     }
 
     private void loadImages(BoardPanel boardPanel) {
-        /*for (int i = 0; i < 8; i++) {
-            boardPanel.getBoard()[whiteChessPieces[i].getPosition().getRow()] 
-                                 [whiteChessPieces[i].getPosition().getColumn()].setIcon(
-                                  convertImageToImageIcon(whiteChessPieces[i].getImage()));
-            boardPanel.getBoard()[blackChessPieces[i].getPosition().getRow()]
-                                 [blackChessPieces[i].getPosition().getColumn()].setIcon(
-                                  convertImageToImageIcon(blackChessPieces[i].getImage()));
-        }*/
-        
         for (ChessPiece chessPiece : whiteChessPieces) {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
             convertImageToImageIcon(chessPiece.getImage()));
