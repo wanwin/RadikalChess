@@ -1,7 +1,6 @@
 package Model;
 
-public interface Bitmap{
-
-    public int getWidth();
+public interface Bitmap {
     public int getHeight();
+    public int getWidth();
 }

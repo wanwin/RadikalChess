@@ -2,23 +2,35 @@ package UserInterface;
 
 import Model.ChessPiece;
 import Model.Image;
+import Model.Position;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+    
 public class MainFrame extends JFrame {
     
-    private final ArrayList<ChessPiece> whiteChessPieces, blackChessPieces;
+    private final ArrayList<ChessPiece> whiteChessPieces;
+    private final ArrayList<ChessPiece> blackChessPieces;
+    private int row = 6;
+    private int column = 4;
+    boolean buttonPressed;
+    CellButton firstClicked;
+    ChessBoardPanel boardPanel;
     
-    public MainFrame(ArrayList<ChessPiece> whiteChessPieces, ArrayList<ChessPiece> blackChessPieces){
-        this.whiteChessPieces = whiteChessPieces;
-        this.blackChessPieces=blackChessPieces;
+    public MainFrame(ArrayList<ChessPiece> whiteChessPieces, 
+                     ArrayList<ChessPiece> blackChessPieces){
+        this.whiteChessPieces= whiteChessPieces;
+        this.blackChessPieces= blackChessPieces;
         this.setTitle("RadikalChess");
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -78,27 +90,52 @@ public class MainFrame extends JFrame {
     }
 
     private JPanel createBoardPanel() {
-        BoardPanel boardPanel = new BoardPanel();
-        boardPanel.setLayout(new GridLayout(6, 4));
-        createCells(boardPanel);
+        boardPanel = new ChessBoardPanel(row, column);
+        boardPanel.setLayout(new GridLayout(row, column));
+        createCells();
         loadImages(boardPanel);
         return boardPanel;
     }
 
-    private void createCells(BoardPanel boardPanel) {
+    private void createCells() {
         boolean blackFirst = true;
-        for (int i = 0; i < 6; i++){
-            for (int j = 0; j < 4; j++){
-	        Cell cell = new Cell();
+        for (int i = 0; i < row; i++){
+            for (int j = 0; j < column; j++){
+	        CellButton cell = new CellButton(null, new Position(i,j));
                 paintCell(blackFirst, j, cell);
 	        boardPanel.getBoard()[i][j] = cell;
+                boardPanel.getBoard()[i][j].addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Object source = e.getSource();
+                        if (source instanceof CellButton)
+                            if (buttonPressed){
+                                boardPanel.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel);
+                                buttonPressed = false;
+                            }    
+                            else{
+                                buttonPressed = true;
+                                firstClicked = (CellButton) e.getSource();
+                            }    
+                    }
+                });
 		boardPanel.add(cell);
             }
             blackFirst = !blackFirst;
         }
-    }        
-
-    private void paintCell(boolean blackFirst, int j, Cell cell) {
+        placePieces();
+    }
+    
+    private void placePieces(){
+        for (ChessPiece chessPiece : whiteChessPieces) {
+            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
+        }
+        for (ChessPiece chessPiece : blackChessPieces) {
+            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
+        }
+    }
+    
+    private void paintCell(boolean blackFirst, int j, CellButton cell) {
         if (blackFirst){
             if (j % 2 == 0)
                 cell.setBackground(Color.DARK_GRAY);
@@ -113,23 +150,20 @@ public class MainFrame extends JFrame {
         }
     }
 
-    private void loadImages(BoardPanel boardPanel) {
+    private void loadImages(ChessBoardPanel boardPanel) {
         for (ChessPiece chessPiece : whiteChessPieces) {
-            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
-            convertImageToImageIcon(chessPiece.getImage()));
+            boardPanel.getBoard()[chessPiece.getPosition().getRow()]
+                                 [chessPiece.getPosition().getColumn()].setIcon(
+                                 convertImageToImageIcon(chessPiece.getImage()));
         }
         for (ChessPiece chessPiece : blackChessPieces) {
-            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
-            convertImageToImageIcon(chessPiece.getImage()));
+            boardPanel.getBoard()[chessPiece.getPosition().getRow()]
+                                 [chessPiece.getPosition().getColumn()].setIcon(
+                                 convertImageToImageIcon(chessPiece.getImage()));
         }
     }
     
-    
-    private int getAbsPosition(int i, ChessPiece[] chessPiece) {
-        return chessPiece[i].getPosition().getRow() * 4 + chessPiece[i].getPosition().getColumn();
-    }
-    
-    private ImageIcon convertImageToImageIcon(Image image){
-        return new ImageIcon(image.getBitmap().getBufferedImage());
+    private Icon convertImageToImageIcon(Image image){
+        return new ImageIcon(((SwingBitmap) image.getBitmap()).getBufferedImage());
     }
 }
