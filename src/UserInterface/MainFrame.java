@@ -19,8 +19,7 @@ import javax.swing.JPanel;
     
 public class MainFrame extends JFrame {
     
-    private final ArrayList<ChessPiece> whiteChessPieces;
-    private final ArrayList<ChessPiece> blackChessPieces;
+    private final ArrayList<ChessPiece> whiteChessPieces, blackChessPieces, allPieces;
     private int row = 6;
     private int column = 4;
     boolean buttonPressed;
@@ -28,9 +27,12 @@ public class MainFrame extends JFrame {
     ChessBoardPanel boardPanel;
     
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces, 
-                     ArrayList<ChessPiece> blackChessPieces){
+                     ArrayList<ChessPiece> blackChessPieces,
+                     ArrayList<ChessPiece> allPieces
+                     ){
         this.whiteChessPieces= whiteChessPieces;
         this.blackChessPieces= blackChessPieces;
+        this.allPieces = allPieces;
         this.setTitle("RadikalChess");
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -110,7 +112,7 @@ public class MainFrame extends JFrame {
                         Object source = e.getSource();
                         if (source instanceof CellButton)
                             if (buttonPressed){
-                                boardPanel.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel);
+                                boardPanel.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel, allPieces);
                                 buttonPressed = false;
                             }    
                             else{

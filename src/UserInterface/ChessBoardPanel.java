@@ -1,9 +1,11 @@
 package UserInterface;
 
 import Model.ChessBoard;
+import Model.ChessPiece;
 import Model.Movement;
 import Model.ProposeMove;
 import Model.ProposeMoveAttack;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class ChessBoardPanel extends JPanel{
@@ -21,17 +23,37 @@ public class ChessBoardPanel extends JPanel{
         return board;
     }
 
-    public void possibleMove(CellButton firstClicked, CellButton secondClicked, ChessBoardPanel boardPanel) {
-        if (ProposeMoveAttack.getInstance().selectMoveAttack(firstClicked.getCell().getChessPiece(), 
+    public void possibleMove(CellButton firstClicked, CellButton secondClicked, 
+                             ChessBoardPanel boardPanel, 
+                             ArrayList<ChessPiece> allPieces){
+        if (ProposeMove.getInstance().selectMove(firstClicked.getCell().getChessPiece(), 
                                                  createMovement(firstClicked, secondClicked), 
-                                                 createBoard(boardPanel)) 
-            ||
-            ProposeMove.getInstance().selectMove(firstClicked.getCell().getChessPiece(), 
+                                                 createBoard(boardPanel)) && 
+            ProposeMove.getInstance().isEuclideanDistanceReduced(allPieces, 
+                                                                 createMovement(firstClicked, 
+                                                                 secondClicked), 
+                                                                 firstClicked.getCell()
+                                                                 .getChessPiece())){
+            updateChessPieceIcon(firstClicked, secondClicked, allPieces);
+        }
+        if (ProposeMoveAttack.
+                getInstance().selectMoveAttack(firstClicked.getCell().getChessPiece(), 
                                                  createMovement(firstClicked, secondClicked), 
                                                  createBoard(boardPanel))){
-            secondClicked.addPiece(firstClicked);
-            firstClicked.removePiece();
+            updateChessPieceIcon(firstClicked, secondClicked, allPieces);
+            allPieces.remove(secondClicked.getCell().getChessPiece());
         }
+    }
+    
+    private void updateChessPieceIcon(CellButton firstClicked, CellButton secondClicked, 
+                                      ArrayList<ChessPiece>allPieces){
+        for (ChessPiece chessPiece : allPieces) {
+                if (chessPiece.getName().equals(firstClicked.getCell().getChessPiece().getName()) &&
+                    chessPiece.getColour().equals(firstClicked.getCell().getChessPiece().getColour()))
+                    chessPiece.setPosition(secondClicked.getCell().getPosition());
+            }
+        secondClicked.addPiece(firstClicked);
+        firstClicked.removePiece();
     }
     
     private Movement createMovement(CellButton firstClicked, CellButton secondClicked){
