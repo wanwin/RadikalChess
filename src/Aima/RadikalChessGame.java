@@ -1,20 +1,15 @@
 package Aima;
 
+import Model.ChessPiece;
 import Model.Movement;
 import Model.Player;
+import java.util.ArrayList;
 import java.util.List;
 
-public class RadikalChessGame implements Game <RadikalChessState, Movement, Player>{
+public class RadikalChessGame implements Game<RadikalChessState, Movement, Player> {
+
     private RadikalChessState initialState;
     private RadikalChessState actualState;
-
-    public RadikalChessGame(RadikalChessState radikalChessState) {
-        try {
-            this.initialState=(RadikalChessState) radikalChessState.clone();
-            this.actualState=(RadikalChessState) radikalChessState.clone();
-        } catch (CloneNotSupportedException ex) {
-        }
-    }
 
     public RadikalChessState getActualState() {
         return actualState;
@@ -30,7 +25,7 @@ public class RadikalChessGame implements Game <RadikalChessState, Movement, Play
     }
 
     @Override
-    public List<Movement> getActions(RadikalChessState state) {
+    public List<Movement> getActions(RadikalChessState state){
         return null;
     }
 
@@ -40,11 +35,17 @@ public class RadikalChessGame implements Game <RadikalChessState, Movement, Play
     }
 
     @Override
-    public boolean isTerminal(RadikalChessState state) {
-        return state.isTerminal();
+    public boolean isTerminal(ArrayList<ChessPiece> allPieces) {
+        int numberOfKings = 0;
+        for (ChessPiece chessPiece : allPieces) {
+            if (chessPiece.getName().equals("King")) {
+                numberOfKings++;
+            }
+        }
+        return (numberOfKings != 2);
     }
 
-   @Override
+    @Override
     public Player[] getPlayers() {
         return null;
     }
