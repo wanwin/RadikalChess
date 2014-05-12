@@ -29,55 +29,7 @@ public class ChessBoardPanel extends JPanel {
         return cellPanel;
     }
 
-    public void possibleMove(CellButton firstClicked, CellButton secondClicked,
-            ChessBoardPanel boardPanel, ArrayList<ChessPiece> allPieces, Player player) throws IOException {
-        if (firstClicked.getCell().getChessPiece().getColour().equals(player.getPlayer())) {
-            if (ProposeMoveAttack.getInstance().selectMoveAttack(
-                    firstClicked.getCell().getChessPiece(),
-                    createMovement(firstClicked, secondClicked),
-                    createBoard(boardPanel))) {
-                player.setPlayer((player.getPlayer().equals("White")) ? "Black" : "White");
-                ChessPiece piece = secondClicked.getCell().getChessPiece();
-                updateChessPieceIcon(firstClicked, secondClicked, allPieces);
-                allPieces.remove(piece);
-            }
-            if (ProposeMove.getInstance().selectMove(
-                    firstClicked.getCell().getChessPiece(),
-                    createMovement(firstClicked, secondClicked),
-                    createBoard(boardPanel))) {
-                if (!ProposeMove.getInstance().isEuclideanDistanceReduced(allPieces, createMovement(firstClicked, secondClicked),
-                        firstClicked.getCell().getChessPiece())
-                        && !(firstClicked.getCell().getChessPiece() instanceof Pawn)) {
-                    return;
-                }
-                player.setPlayer((player.getPlayer().equals("White")) ? "Black" : "White");
-                updateChessPieceIcon(firstClicked, secondClicked, allPieces);
-            }
-        }
-        if (secondClicked.getCell().getChessPiece() instanceof Pawn 
-                && ((secondClicked.getCell().getChessPiece().getPosition().getRow() == 0
-                && secondClicked.getCell().getChessPiece().getColour().equals("White") || 
-                secondClicked.getCell().getChessPiece().getPosition().getRow()
-                == boardPanel.getBoard().length - 1 && secondClicked.getCell().getChessPiece().getColour().equals("Black")))) {
-            for (ChessPiece chessPiece : allPieces) {
-                if (chessPiece.getName().equals(secondClicked.getCell().getChessPiece().getName())
-                        && chessPiece.getColour().equals(secondClicked.getCell().getChessPiece().getColour())
-                        && chessPiece.getPosition().equals(secondClicked.getCell().getChessPiece().getPosition())) {
-                    chessPiece = new Queen("Queen", chessPiece.getPosition(), chessPiece.getColour());
-                    chessPiece.setImage(new Image(new SwingBitmap(ImageIO.read(new File(RadikalChess.filename + "/"
-                            + chessPiece.getColour() + "Queen"
-                            + ".png")))));
-                    secondClicked.getCell().setChessPiece(chessPiece);
-                    secondClicked.setIcon
-                    (new ImageIcon
-                    (((SwingBitmap) secondClicked.getCell().getChessPiece().getImage().getBitmap()).getBufferedImage()));
-                    break;
-                }
-            }
-        }
-    }
-
-    private void updateChessPieceIcon(CellButton firstClicked, CellButton secondClicked,
+    public void updateChessPieceIcon(CellButton firstClicked, CellButton secondClicked,
             ArrayList<ChessPiece> allPieces) {
         for (ChessPiece chessPiece : allPieces) {
             if (chessPiece.getName().equals(firstClicked.getCell().getChessPiece().getName())

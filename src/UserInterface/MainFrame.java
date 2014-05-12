@@ -194,7 +194,8 @@ public class MainFrame extends JFrame {
                                 if (!firstClicked.getCell().getPosition().equals(
                                         secondClicked.getCell().getPosition())) {
                                     try {
-                                        boardPanel.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel, allChessPieces, player);
+                                        currentState.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel, 
+                                        allChessPieces, player);
                                     } catch (IOException ex) {
                                     }
                                 }

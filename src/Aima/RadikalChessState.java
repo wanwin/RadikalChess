@@ -47,6 +47,7 @@ public class RadikalChessState implements Cloneable {
                     chessBoard)) {
                 player.setPlayer((player.getPlayer().equals("White")) ? "Black" : "White");
                 ChessPiece piece = secondClicked.getCell().getChessPiece();
+                boardPanel.updateChessPieceIcon(firstClicked, secondClicked, allPieces);
                 allPieces.remove(piece);
             }
             if (ProposeMove.getInstance().selectMove(
@@ -59,6 +60,7 @@ public class RadikalChessState implements Cloneable {
                     return;
                 }
                 player.setPlayer((player.getPlayer().equals("White")) ? "Black" : "White");
+                boardPanel.updateChessPieceIcon(firstClicked, secondClicked, allPieces);
             }
         }
         if (secondClicked.getCell().getChessPiece() instanceof Pawn 
