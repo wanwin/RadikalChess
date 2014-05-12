@@ -2,13 +2,19 @@ package UserInterface;
 
 import Model.ChessPiece;
 import Model.Image;
+import Model.Player;
 import Model.Position;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,38 +22,38 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-    
 public class MainFrame extends JFrame {
-    
-    private final ArrayList<ChessPiece> whiteChessPieces, blackChessPieces, allPieces;
+
+    private final ArrayList<ChessPiece> whiteChessPieces,
+            blackChessPieces, allChessPieces;
     private int row = 6;
     private int column = 4;
-    boolean buttonPressed;
-    CellButton firstClicked;
-    ChessBoardPanel boardPanel;
-    
-    public MainFrame(ArrayList<ChessPiece> whiteChessPieces, 
-                     ArrayList<ChessPiece> blackChessPieces,
-                     ArrayList<ChessPiece> allPieces
-                     ){
-        this.whiteChessPieces= whiteChessPieces;
-        this.blackChessPieces= blackChessPieces;
-        this.allPieces = allPieces;
+    private boolean buttonPressed;
+    private ChessBoardPanel boardPanel;
+    private CellButton firstClicked;
+    private Player player = new Player("White");
+
+    public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
+            ArrayList<ChessPiece> blackChessPieces,
+            ArrayList<ChessPiece> allChessPieces) {
+        this.whiteChessPieces = whiteChessPieces;
+        this.blackChessPieces = blackChessPieces;
+        this.allChessPieces = allChessPieces;
         this.setTitle("RadikalChess");
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.createComponent();
-        this.setSize(500,600);
+        this.pack();
         this.setLocationRelativeTo(null);
     }
 
     private void createComponent() {
         this.add(createToolbar(), BorderLayout.NORTH);
-        this.add(createBoardPanel(), BorderLayout.CENTER);
+        this.add(createBoardPanel(), BorderLayout.SOUTH);
     }
 
     private JPanel createToolbar() {
-        JPanel panel=new JPanel();
+        JPanel panel = new JPanel();
         panel.add(createDifficulty());
         panel.add(createBoardSize());
         panel.add(createAlgorithm());
@@ -58,114 +64,195 @@ public class MainFrame extends JFrame {
     }
 
     private JComboBox createDifficulty() {
-        JComboBox difficulty=new JComboBox(new String[]{"Easy", "Medium", "Hard"});
-        difficulty.setSelectedIndex(0);
+        final JComboBox difficulty = new JComboBox(new String[]{"Easy", "Medium", "Hard"});
+        difficulty.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() != ItemEvent.SELECTED) {
+                    return;
+                }
+                if (difficulty.getSelectedItem().equals("Easy")) {
+                    if (difficulty.getSelectedItem().equals("Medium")) {
+                        if (difficulty.getSelectedItem().equals("Hard")) {
+                            return;
+                        }
+                    }
+                }
+            }
+        });
         return difficulty;
     }
 
     private JComboBox createBoardSize() {
-        JComboBox size=new JComboBox(
-                       new String[]{"Size=6x4", "Size=8x6", "Size=10x8", "Size=12x10"});
-        size.setSelectedIndex(0);
+        final JComboBox size = new JComboBox(new String[]{"Size=6x4", "Size=8x6", "Size=10x8", "Size=12x10"});
+        size.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() != ItemEvent.SELECTED) {
+                    return;
+                }
+                if (size.getSelectedItem().equals("Size=6x4")) {
+                    setRow(6);
+                    setColumn(4);
+                    createBoardPanel();
+                }
+                if (size.getSelectedItem().equals("Size=8x6")) {
+                    setRow(8);
+                    setColumn(6);
+                    createBoardPanel();
+                }
+                if (size.getSelectedItem().equals("Size=10x8")) {
+                    setRow(10);
+                    setColumn(8);
+                    createBoardPanel();
+                }
+                if (size.getSelectedItem().equals("Size=12x10")) {
+                    setRow(12);
+                    setColumn(10);
+                    createBoardPanel();
+                }
+            }
+        });
         return size;
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
     private JComboBox createAlgorithm() {
-        JComboBox algorithm=new JComboBox(new String[]{"Minimax", "AlphaBeta"});
-        algorithm.setSelectedIndex(0);
+        final JComboBox algorithm = new JComboBox(new String[]{"MinimaxSearch", "AlphaBetaSearch"});
+        algorithm.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() != ItemEvent.SELECTED) {
+                    return;
+                }
+                if (algorithm.getSelectedItem().equals("MinimaxSearch")) {
+                    if (algorithm.getSelectedItem().equals("AlphaBetaSearch")) {
+                        return;
+                    }
+                }
+            }
+        });
         return algorithm;
     }
 
     private JButton createPlayButton() {
-        JButton play=new JButton("Play");
+        JButton play = new JButton("Play");
         return play;
     }
 
     private JButton createResetButton() {
-        JButton reset=new JButton("Reset");
+        JButton reset = new JButton("Reset");
         return reset;
     }
 
     private JButton createProposeMoveButton() {
-        JButton proposeMove=new JButton("Propose Move");
+        JButton proposeMove = new JButton("Propose Move");
         return proposeMove;
     }
 
-    private JPanel createBoardPanel() {
+    private ChessBoardPanel createBoardPanel() {
         boardPanel = new ChessBoardPanel(row, column);
         boardPanel.setLayout(new GridLayout(row, column));
         createCells();
-        loadImages(boardPanel);
+        loadImages();
         return boardPanel;
     }
 
-    private void createCells() {
+    public void createCells() {
         boolean blackFirst = true;
-        for (int i = 0; i < row; i++){
-            for (int j = 0; j < column; j++){
-	        CellButton cell = new CellButton(null, new Position(i,j));
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                CellButton cell = new CellButton(null, new Position(i, j));
                 paintCell(blackFirst, j, cell);
-	        boardPanel.getBoard()[i][j] = cell;
-                boardPanel.getBoard()[i][j].addActionListener(new ActionListener(){
+                boardPanel.getBoard()[i][j] = cell;
+                boardPanel.getBoard()[i][j].addActionListener(new ActionListener() {
+                    private CellButton secondClicked;
+
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         Object source = e.getSource();
-                        if (source instanceof CellButton)
-                            if (buttonPressed){
-                                boardPanel.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel, allPieces);
+                        if (source instanceof CellButton) {
+                            if (buttonPressed) {
+                                secondClicked = (CellButton) e.getSource();
+                                if (!firstClicked.getCell().getPosition().equals(
+                                        secondClicked.getCell().getPosition())) {
+                                    try {
+                                        boardPanel.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel, allChessPieces, player);
+                                    }
+                                    catch (IOException ex) {
+                                    }
+                                }
                                 buttonPressed = false;
-                            }    
-                            else{
+                            }
+                            else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
                                 buttonPressed = true;
                                 firstClicked = (CellButton) e.getSource();
-                            }    
+                            }
+                        }
                     }
                 });
-		boardPanel.add(cell);
+                boardPanel.add(cell);
             }
             blackFirst = !blackFirst;
         }
         placePieces();
     }
-    
-    private void placePieces(){
+
+    private void placePieces() {
         for (ChessPiece chessPiece : whiteChessPieces) {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
         }
         for (ChessPiece chessPiece : blackChessPieces) {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
-        }
-    }
-    
-    private void paintCell(boolean blackFirst, int j, CellButton cell) {
-        if (blackFirst){
-            if (j % 2 == 0)
-                cell.setBackground(Color.DARK_GRAY);
-            else
-                cell.setBackground(Color.WHITE);
-        } 
-        else{
-            if (j % 2 == 0)
-                cell.setBackground(Color.WHITE);
-            else
-                cell.setBackground(Color.DARK_GRAY);
         }
     }
 
-    private void loadImages(ChessBoardPanel boardPanel) {
-        for (ChessPiece chessPiece : whiteChessPieces) {
-            boardPanel.getBoard()[chessPiece.getPosition().getRow()]
-                                 [chessPiece.getPosition().getColumn()].setIcon(
-                                 convertImageToImageIcon(chessPiece.getImage()));
+    private void paintCell(boolean blackFirst, int j, CellButton cell) {
+        if (blackFirst) {
+            if (j % 2 == 0) {
+                cell.setBackground(Color.DARK_GRAY);
+            }
+            else {
+                cell.setBackground(Color.WHITE);
+            }
         }
-        for (ChessPiece chessPiece : blackChessPieces) {
-            boardPanel.getBoard()[chessPiece.getPosition().getRow()]
-                                 [chessPiece.getPosition().getColumn()].setIcon(
-                                 convertImageToImageIcon(chessPiece.getImage()));
+        else {
+            if (j % 2 == 0) {
+                cell.setBackground(Color.WHITE);
+            }
+            else {
+                cell.setBackground(Color.DARK_GRAY);
+            }
         }
     }
-    
-    private Icon convertImageToImageIcon(Image image){
+
+    private void loadImages() {
+        for (ChessPiece chessPiece : whiteChessPieces) {
+            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
+                    convertImageToImageIcon(chessPiece.getImage()));
+        }
+        for (ChessPiece chessPiece : blackChessPieces) {
+            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
+                    convertImageToImageIcon(chessPiece.getImage()));
+        }
+    }
+
+    private Icon convertImageToImageIcon(Image image) {
         return new ImageIcon(((SwingBitmap) image.getBitmap()).getBufferedImage());
     }
 }

@@ -1,9 +1,9 @@
 package Model;
 
-public class Image{
-    
+public class Image {
+
     private final Bitmap bitmap;
-    
+
     public Image(Bitmap bitmap) {
         this.bitmap = bitmap;
     }

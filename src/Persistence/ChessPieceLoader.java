@@ -38,15 +38,16 @@ public class ChessPieceLoader {
     }
 
     private void createPawn(String colour) {
-        if("white".equals(colour.toLowerCase())){
-            for (int i=0;i<4;i++) {
-                chessPieceSet.add(new Pawn("Pawn"+i, new Position(4, i), colour));
-                chessPieceSet.toArray(new ChessPiece[8])[i].setImage(loadImage(colour+"Pawn"));
+        if ("white".equals(colour.toLowerCase())) {
+            for (int i = 0; i < 4; i++) {
+                chessPieceSet.add(new Pawn("Pawn" + i, new Position(4, i), colour));
+                chessPieceSet.toArray(new ChessPiece[8])[i].setImage(loadImage(colour + "Pawn"));
             }
-        }else if("black".equals(colour.toLowerCase())){
-            for (int i=0;i<4;i++){
-                chessPieceSet.add(new Pawn("Pawn"+i, new Position(1, 3-i), colour));
-                chessPieceSet.toArray(new ChessPiece[8])[i].setImage(loadImage(colour+"Pawn"));
+        }
+        else if ("black".equals(colour.toLowerCase())) {
+            for (int i = 0; i < 4; i++) {
+                chessPieceSet.add(new Pawn("Pawn" + i, new Position(1, 3 - i), colour));
+                chessPieceSet.toArray(new ChessPiece[8])[i].setImage(loadImage(colour + "Pawn"));
             }
         }
     }
@@ -54,40 +55,44 @@ public class ChessPieceLoader {
     private void createKing(String colour) {
         if ("white".equals(colour.toLowerCase())) {
             chessPieceSet.add(new King("King", new Position(5, 3), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[4].setImage(loadImage(colour+"King"));
-        } else if ("black".equals(colour.toLowerCase())) {
+            chessPieceSet.toArray(new ChessPiece[8])[4].setImage(loadImage(colour + "King"));
+        }
+        else if ("black".equals(colour.toLowerCase())) {
             chessPieceSet.add(new King("King", new Position(0, 0), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[4].setImage(loadImage(colour+"King"));
+            chessPieceSet.toArray(new ChessPiece[8])[4].setImage(loadImage(colour + "King"));
         }
     }
 
     private void createQueen(String colour) {
         if ("white".equals(colour.toLowerCase())) {
             chessPieceSet.add(new Queen("Queen", new Position(5, 2), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[5].setImage(loadImage(colour+"Queen"));
-        } else if ("black".equals(colour.toLowerCase())) {
+            chessPieceSet.toArray(new ChessPiece[8])[5].setImage(loadImage(colour + "Queen"));
+        }
+        else if ("black".equals(colour.toLowerCase())) {
             chessPieceSet.add(new Queen("Queen", new Position(0, 1), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[5].setImage(loadImage(colour+"Queen"));
+            chessPieceSet.toArray(new ChessPiece[8])[5].setImage(loadImage(colour + "Queen"));
         }
     }
 
     private void createBishop(String colour) {
         if ("white".equals(colour.toLowerCase())) {
             chessPieceSet.add(new Bishop("Bishop", new Position(5, 1), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[6].setImage(loadImage(colour+"Bishop"));
-        } else if ("black".equals(colour.toLowerCase())) {
+            chessPieceSet.toArray(new ChessPiece[8])[6].setImage(loadImage(colour + "Bishop"));
+        }
+        else if ("black".equals(colour.toLowerCase())) {
             chessPieceSet.add(new Bishop("Bishop", new Position(0, 2), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[6].setImage(loadImage(colour+"Bishop"));
+            chessPieceSet.toArray(new ChessPiece[8])[6].setImage(loadImage(colour + "Bishop"));
         }
     }
 
     private void createRook(String colour) {
         if ("white".equals(colour.toLowerCase())) {
             chessPieceSet.add(new Rook("Rook", new Position(5, 0), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[7].setImage(loadImage(colour+"Rook"));
-        } else if ("black".equals(colour.toLowerCase())) {
+            chessPieceSet.toArray(new ChessPiece[8])[7].setImage(loadImage(colour + "Rook"));
+        }
+        else if ("black".equals(colour.toLowerCase())) {
             chessPieceSet.add(new Rook("Rook", new Position(0, 3), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[7].setImage(loadImage(colour+"Rook"));
+            chessPieceSet.toArray(new ChessPiece[8])[7].setImage(loadImage(colour + "Rook"));
         }
     }
 
@@ -97,8 +102,9 @@ public class ChessPieceLoader {
 
     private BufferedImage loadBufferedImage(String name) {
         try {
-            return ImageIO.read(new File(path + "/" +name + ".png"));
-        } catch (IOException ex) {
+            return ImageIO.read(new File(path + "/" + name + ".png"));
+        }
+        catch (IOException ex) {
             return null;
         }
     }

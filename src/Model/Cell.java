@@ -1,13 +1,13 @@
 package Model;
 
-public class Cell{
-    
+public class Cell {
+
     private ChessPiece chessPiece;
     private Position position;
 
     public Cell(ChessPiece chessPiece, Position position) {
-        this.chessPiece=chessPiece;
-        this.position=position;
+        this.chessPiece = chessPiece;
+        this.position = position;
     }
 
     public ChessPiece getChessPiece() {

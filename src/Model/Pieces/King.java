@@ -4,8 +4,8 @@ import Model.ChessPiece;
 import Model.Position;
 
 public class King extends ChessPiece {
-    
-    private final double value=Double.POSITIVE_INFINITY;
+
+    private final double value = Double.POSITIVE_INFINITY;
 
     public King(String name, Position position, String colour) {
         super(name, position, colour);
@@ -18,6 +18,6 @@ public class King extends ChessPiece {
 
     @Override
     public int getValue() {
-        return (int)value;
+        return (int) value;
     }
 }

@@ -8,13 +8,14 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class CellButton extends JButton{
-    
+public class CellButton extends JButton {
+
     private Cell cell;
-    
-    public CellButton(ChessPiece chessPiece, Position position){
-        cell = new Cell (chessPiece, position);
+
+    public CellButton(ChessPiece chessPiece, Position position) {
+        cell = new Cell(chessPiece, position);
     }
+
     public Cell getCell() {
         return cell;
     }
@@ -32,8 +33,8 @@ public class CellButton extends JButton{
         this.cell.setChessPiece(firstClicked.getCell().getChessPiece());
         this.setIcon(convertImageToIcon(firstClicked.getCell().getChessPiece().getImage()));
     }
-    
-    private Icon convertImageToIcon(Image image){
-        return new ImageIcon(((SwingBitmap)image.getBitmap()).getBufferedImage());    
+
+    private Icon convertImageToIcon(Image image) {
+        return new ImageIcon(((SwingBitmap) image.getBitmap()).getBufferedImage());
     }
 }

@@ -3,12 +3,12 @@ package UserInterface;
 import Model.Bitmap;
 import java.awt.image.BufferedImage;
 
-public class SwingBitmap implements Bitmap{
-    
+public class SwingBitmap implements Bitmap {
+
     private final BufferedImage bufferedImage;
 
     public SwingBitmap(BufferedImage bufferedImage) {
-        this.bufferedImage=bufferedImage;
+        this.bufferedImage = bufferedImage;
     }
 
     public BufferedImage getBufferedImage() {

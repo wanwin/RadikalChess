@@ -4,8 +4,8 @@ import Model.ChessPiece;
 import Model.Position;
 
 public class Pawn extends ChessPiece {
-    
-    private final int value=1;
+
+    private final int value = 1;
 
     public Pawn(String name, Position position, String colour) {
         super(name, position, colour);

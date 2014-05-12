@@ -4,8 +4,8 @@ import Model.ChessPiece;
 import Model.Position;
 
 public class Rook extends ChessPiece {
-    
-    private final int value=5;
+
+    private final int value = 5;
 
     public Rook(String name, Position position, String colour) {
         super(name, position, colour);
