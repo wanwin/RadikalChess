@@ -1,5 +1,7 @@
 package UserInterface;
 
+import Aima.RadikalChessState;
+import Model.ChessBoard;
 import Model.ChessPiece;
 import Model.Image;
 import Model.Player;
@@ -13,8 +15,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,18 +24,19 @@ import javax.swing.JPanel;
 
 public class MainFrame extends JFrame {
 
-    private final ArrayList<ChessPiece> whiteChessPieces,
-            blackChessPieces, allChessPieces;
+    private final ArrayList<ChessPiece> whiteChessPieces, blackChessPieces, allChessPieces;
     private int row = 6;
     private int column = 4;
     private boolean buttonPressed;
     private ChessBoardPanel boardPanel;
     private CellButton firstClicked;
     private Player player = new Player("White");
+    private RadikalChessState currentState;
 
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
             ArrayList<ChessPiece> blackChessPieces,
-            ArrayList<ChessPiece> allChessPieces) {
+            ArrayList<ChessPiece> allChessPieces,
+            ChessBoard chessBoard) {
         this.whiteChessPieces = whiteChessPieces;
         this.blackChessPieces = blackChessPieces;
         this.allChessPieces = allChessPieces;
@@ -43,6 +44,7 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.createComponent();
+        fillBoard();
         this.pack();
         this.setLocationRelativeTo(null);
     }
@@ -168,12 +170,12 @@ public class MainFrame extends JFrame {
     private ChessBoardPanel createBoardPanel() {
         boardPanel = new ChessBoardPanel(row, column);
         boardPanel.setLayout(new GridLayout(row, column));
-        createCells();
+        createCellButton();
         loadImages();
         return boardPanel;
     }
 
-    public void createCells() {
+    public void createCellButton() {
         boolean blackFirst = true;
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
@@ -193,13 +195,11 @@ public class MainFrame extends JFrame {
                                         secondClicked.getCell().getPosition())) {
                                     try {
                                         boardPanel.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel, allChessPieces, player);
-                                    }
-                                    catch (IOException ex) {
+                                    } catch (IOException ex) {
                                     }
                                 }
                                 buttonPressed = false;
-                            }
-                            else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
+                            } else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
                                 buttonPressed = true;
                                 firstClicked = (CellButton) e.getSource();
                             }
@@ -221,21 +221,18 @@ public class MainFrame extends JFrame {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
         }
     }
-
+    
     private void paintCell(boolean blackFirst, int j, CellButton cell) {
         if (blackFirst) {
             if (j % 2 == 0) {
                 cell.setBackground(Color.DARK_GRAY);
-            }
-            else {
+            } else {
                 cell.setBackground(Color.WHITE);
             }
-        }
-        else {
+        } else {
             if (j % 2 == 0) {
                 cell.setBackground(Color.WHITE);
-            }
-            else {
+            } else {
                 cell.setBackground(Color.DARK_GRAY);
             }
         }
@@ -254,5 +251,15 @@ public class MainFrame extends JFrame {
 
     private Icon convertImageToImageIcon(Image image) {
         return new ImageIcon(((SwingBitmap) image.getBitmap()).getBufferedImage());
+    }
+    
+    private void fillBoard(){
+        ChessBoard chessBoard = new ChessBoard(row, column);
+        for (int i = 0; i < row; i++) {
+           for (int j = 0; j < column; j++) {
+                chessBoard.getCell()[i][j] = boardPanel.getBoard()[i][j].getCell();
+            }
+        }
+        currentState = new RadikalChessState(chessBoard, player);
     }
 }

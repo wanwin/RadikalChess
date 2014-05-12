@@ -1,4 +1,8 @@
-package Aima;
+package Aima.Search;
+
+import Aima.Game;
+import Aima.Metrics;
+import Aima.Search.AdversarialSearch;
 
 public class MinimaxSearch<STATE, ACTION, PLAYER> implements
 		AdversarialSearch<STATE, ACTION> {
