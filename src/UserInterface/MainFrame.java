@@ -258,7 +258,7 @@ public class MainFrame extends JFrame {
         for (int i = 0; i < row; i++) {
            for (int j = 0; j < column; j++) {
                 chessBoard.getCell()[i][j] = boardPanel.getBoard()[i][j].getCell();
-            }
+           }
         }
         currentState = new RadikalChessState(chessBoard, player);
     }
