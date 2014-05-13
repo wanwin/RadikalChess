@@ -206,35 +206,7 @@ public class ProposeMove {
         return false;
     }
 
-    public boolean isEuclideanDistanceReduced(ArrayList<ChessPiece> allPieces, Movement movement,
-            ChessPiece chessPiece) {
-        int d1, d2;
-        if (searchKingPosition(allPieces, chessPiece) != null) {
-            d1 = calculateEuclideanDistance(calculateRowDistance(movement.getOrigin().getRow(),
-                    searchKingPosition(allPieces, chessPiece).getRow()),
-                    calculateColumnDistance(movement.getOrigin().getColumn(),
-                    searchKingPosition(allPieces, chessPiece).getColumn()));
-            d2 = calculateEuclideanDistance(calculateRowDistance(movement.getDestination().getRow(),
-                    searchKingPosition(allPieces, chessPiece).getRow()),
-                    calculateColumnDistance(movement.getDestination().
-                    getColumn(), searchKingPosition(allPieces, chessPiece)
-                    .getColumn()));
-            if (d2 - d1 < 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Position searchKingPosition(ArrayList<ChessPiece> allPieces, ChessPiece chessPiece) {
-        for (ChessPiece actualChessPiece : allPieces) {
-            if (actualChessPiece.getName().equals("King")
-                    && !actualChessPiece.getColour().equals(chessPiece.getColour())) {
-                return actualChessPiece.getPosition();
-            }
-        }
-        return null;
-    }
+    
 
     private int calculateRowDistance(int row, int kingRow) {
         return kingRow - row;

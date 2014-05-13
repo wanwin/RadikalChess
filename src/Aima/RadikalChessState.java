@@ -8,6 +8,7 @@ import Model.Movement;
 import Model.Pieces.Pawn;
 import Model.Pieces.Queen;
 import Model.Player;
+import Model.Position;
 import Model.ProposeMove;
 import Model.ProposeMoveAttack;
 import UserInterface.CellButton;
@@ -54,9 +55,9 @@ public class RadikalChessState implements Cloneable {
                     firstClicked.getCell().getChessPiece(),
                     createMovement(firstClicked, secondClicked),
                     chessBoard)) {
-                if (!ProposeMove.getInstance().isEuclideanDistanceReduced(allPieces, createMovement(firstClicked, secondClicked),
-                        firstClicked.getCell().getChessPiece())
-                        && !(firstClicked.getCell().getChessPiece() instanceof Pawn)) {
+                if (!isEuclideanDistanceReduced(firstClicked.getCell().getPosition().calculateEuclideanDistance(allPieces, chessBoard,  player.getPlayer()), 
+                    secondClicked.getCell().getPosition().calculateEuclideanDistance(allPieces, chessBoard,  player.getPlayer()))
+                    && !(firstClicked.getCell().getChessPiece() instanceof Pawn)) {
                     return;
                 }
                 player.setPlayer((player.getPlayer().equals("White")) ? "Black" : "White");
@@ -100,10 +101,14 @@ public class RadikalChessState implements Cloneable {
     public boolean isTerminal() {
         return false;
     }
-
+    
     @Override
     protected Object clone() throws CloneNotSupportedException {
         RadikalChessState radikalChessState = new RadikalChessState(chessBoard, player);
         return radikalChessState;
+    }
+    
+    public boolean isEuclideanDistanceReduced(int origin, int destination){
+        return (destination < origin);    
     }
 }

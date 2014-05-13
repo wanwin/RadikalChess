@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class ChessBoard implements Cloneable {
 
     private final Cell[][] cell;
@@ -31,5 +33,15 @@ public class ChessBoard implements Cloneable {
             }
         }
         return board;
+    }
+    
+    public Position searchKingPosition(ArrayList<ChessPiece> allPieces, String colour) {
+        for (ChessPiece actualChessPiece : allPieces) {
+            if (actualChessPiece.getName().equals("King")
+                    && !actualChessPiece.getColour().equals(colour)) {
+                return actualChessPiece.getPosition();
+            }
+        }
+        return null;
     }
 }
