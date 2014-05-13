@@ -3,6 +3,8 @@ package Aima.Search;
 import Aima.Game;
 import Aima.Metrics;
 import Aima.Search.AdversarialSearch;
+import Model.ChessPiece;
+import java.util.ArrayList;
 
 
 public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
@@ -22,14 +24,14 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     }
 
     @Override
-    public ACTION makeDecision(STATE state) {
+    public ACTION makeDecision(STATE state, ArrayList<ChessPiece> allPieces) {
         expandedNodes = 0;
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
         PLAYER player = game.getPlayer(state);
         for (ACTION action : game.getActions(state)) {
             double value = minValue(game.getResult(state, action), player,
-                    Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+                    Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, allPieces);
             if (value > resultValue) {
                 result = action;
                 resultValue = value;
@@ -39,15 +41,16 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
         return result;
     }
 
-    public double maxValue(STATE state, PLAYER player, double alpha, double beta) {
+    public double maxValue(STATE state, PLAYER player, double alpha, double beta, 
+            ArrayList<ChessPiece> allPieces) {
         expandedNodes++;
-        if (game.isTerminal(state)) {
+        if (game.isTerminal(allPieces)) {
             return game.getUtility(state, player);
         }
         double value = Double.NEGATIVE_INFINITY;
         for (ACTION action : game.getActions(state)) {
             value = Math.max(value, minValue( //
-                    game.getResult(state, action), player, alpha, beta));
+                    game.getResult(state, action), player, alpha, beta, allPieces));
             if (value >= beta) {
                 return value;
             }
@@ -56,15 +59,16 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
         return value;
     }
 
-    public double minValue(STATE state, PLAYER player, double alpha, double beta) {
+    public double minValue(STATE state, PLAYER player, double alpha, double beta,
+            ArrayList<ChessPiece> allPieces) {
         expandedNodes++;
-        if (game.isTerminal(state)) {
+        if (game.isTerminal(allPieces)) {
             return game.getUtility(state, player);
         }
         double value = Double.POSITIVE_INFINITY;
         for (ACTION action : game.getActions(state)) {
             value = Math.min(value, maxValue( //
-                    game.getResult(state, action), player, alpha, beta));
+                    game.getResult(state, action), player, alpha, beta, allPieces));
             if (value <= alpha) {
                 return value;
             }

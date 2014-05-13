@@ -1,5 +1,6 @@
 package UserInterface;
 
+import Aima.RadikalChessGame;
 import Aima.RadikalChessState;
 import Model.ChessBoard;
 import Model.ChessPiece;
@@ -32,7 +33,8 @@ public class MainFrame extends JFrame {
     private CellButton firstClicked;
     private Player player = new Player("White");
     private RadikalChessState currentState;
-
+    private RadikalChessGame radikalChessGame = new RadikalChessGame();
+    
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
             ArrayList<ChessPiece> blackChessPieces,
             ArrayList<ChessPiece> allChessPieces,
@@ -189,6 +191,7 @@ public class MainFrame extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         Object source = e.getSource();
                         if (source instanceof CellButton) {
+                            if (!radikalChessGame.isTerminal(allChessPieces))
                             if (buttonPressed) {
                                 secondClicked = (CellButton) e.getSource();
                                 if (!firstClicked.getCell().getPosition().equals(

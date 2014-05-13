@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class RadikalChess {
 
-    public static final String filename = "C:\\Users\\ENTRAR\\Desktop\\Fichas";
+    public static final String filename = "C:\\Users\\usuario\\Desktop\\Fichas";
     private MainFrame frame;
     
     public static void main(String[] args) {
