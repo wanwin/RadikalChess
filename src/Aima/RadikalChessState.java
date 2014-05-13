@@ -73,7 +73,8 @@ public class RadikalChessState implements Cloneable {
                         && chessPiece.getColour().equals(secondClicked.getCell().getChessPiece().getColour())
                         && chessPiece.getPosition().equals(secondClicked.getCell().getChessPiece().getPosition())) {
                     chessPiece = new Queen("Queen", chessPiece.getPosition(), chessPiece.getColour());
-                    chessPiece.setImage(new Image(new SwingBitmap(ImageIO.read(new File(RadikalChess.filename + "/"
+                    chessPiece.setImage(new Image(new SwingBitmap(ImageIO.read(new File(RadikalChess.filename + 
+                            "/"
                             + chessPiece.getColour() + "Queen"
                             + ".png")))));
                     secondClicked.getCell().setChessPiece(chessPiece);
