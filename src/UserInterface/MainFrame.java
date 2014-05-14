@@ -5,6 +5,7 @@ import Aima.RadikalChessState;
 import Model.ChessBoard;
 import Model.ChessPiece;
 import Model.Image;
+import Model.Movement;
 import Model.Player;
 import Model.Position;
 import java.awt.BorderLayout;
@@ -16,6 +17,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,6 +37,7 @@ public class MainFrame extends JFrame {
     private Player player = new Player("White");
     private RadikalChessState currentState;
     private RadikalChessGame radikalChessGame = new RadikalChessGame();
+    private ChessBoard chessBoard; 
     
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
             ArrayList<ChessPiece> blackChessPieces,
@@ -192,14 +196,18 @@ public class MainFrame extends JFrame {
                         Object source = e.getSource();
                         if (source instanceof CellButton) {
                             if (!radikalChessGame.isTerminal(allChessPieces))
-                            if (buttonPressed) {
+                            if (buttonPressed){
                                 secondClicked = (CellButton) e.getSource();
                                 if (!firstClicked.getCell().getPosition().equals(
                                         secondClicked.getCell().getPosition())) {
+                                        if (currentState.possibleMove(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), 
+                                        currentState.getChessBoard(), allChessPieces, player))
+                                            boardPanel.updateChessPieceIcon(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces);
                                     try {
-                                        currentState.possibleMove(firstClicked, (CellButton) e.getSource(), boardPanel, 
-                                        allChessPieces, player);
-                                    } catch (IOException ex) {
+                                        boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces);
+                                    }
+                                    catch (IOException ex) {
+                                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
                                 buttonPressed = false;
@@ -217,7 +225,7 @@ public class MainFrame extends JFrame {
         placePieces();
     }
 
-    private void placePieces() {
+    private void placePieces(){
         for (ChessPiece chessPiece : whiteChessPieces) {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
         }
@@ -258,12 +266,16 @@ public class MainFrame extends JFrame {
     }
     
     private void fillBoard(){
-        ChessBoard chessBoard = new ChessBoard(row, column);
+        chessBoard = new ChessBoard(row, column);
         for (int i = 0; i < row; i++) {
            for (int j = 0; j < column; j++) {
                 chessBoard.getCell()[i][j] = boardPanel.getBoard()[i][j].getCell();
            }
         }
         currentState = new RadikalChessState(chessBoard, player);
+    }
+    
+    private Movement createMovement(Position origin, Position destination){
+        return new Movement(origin, destination);
     }
 }

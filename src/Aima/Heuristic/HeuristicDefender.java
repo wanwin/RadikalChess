@@ -11,8 +11,6 @@ public class HeuristicDefender implements Heuristic {
         for (int i=0;i<state.getChessBoard().getRow();i++) {
             for (int j=0;j<state.getChessBoard().getColumn();j++) {
                 if(state.getChessBoard().getCell()[i][j].getChessPiece()!=null){
-                    // CHEQUEAR MOVIMIENTO DE ATAQUE
-                    //heuristic+=
                 }
             }
         }

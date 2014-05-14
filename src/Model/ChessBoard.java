@@ -23,7 +23,7 @@ public class ChessBoard implements Cloneable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public ChessBoard clone() throws CloneNotSupportedException {
         ChessBoard board = new ChessBoard(cell.length, cell[0].length);
         for (int i = 0; i < cell.length; i++) {
             for (int j = 0; j < cell[0].length; j++) {

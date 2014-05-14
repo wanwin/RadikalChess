@@ -29,8 +29,8 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
         PLAYER player = game.getPlayer(state);
-        for (ACTION action : game.getActions(state)) {
-            double value = minValue(game.getResult(state, action), player,
+        for (ACTION action : game.getActions(allPieces)) {
+            double value = minValue(game.getResult(state, action, allPieces), player,
                     Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, allPieces);
             if (value > resultValue) {
                 result = action;
@@ -48,9 +48,9 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
             return game.getUtility(state, player);
         }
         double value = Double.NEGATIVE_INFINITY;
-        for (ACTION action : game.getActions(state)) {
+        for (ACTION action : game.getActions(allPieces)) {
             value = Math.max(value, minValue( //
-                    game.getResult(state, action), player, alpha, beta, allPieces));
+                    game.getResult(state, action, allPieces), player, alpha, beta, allPieces));
             if (value >= beta) {
                 return value;
             }
@@ -66,9 +66,9 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
             return game.getUtility(state, player);
         }
         double value = Double.POSITIVE_INFINITY;
-        for (ACTION action : game.getActions(state)) {
+        for (ACTION action : game.getActions(allPieces)) {
             value = Math.min(value, maxValue( //
-                    game.getResult(state, action), player, alpha, beta, allPieces));
+                    game.getResult(state, action, allPieces), player, alpha, beta, allPieces));
             if (value <= alpha) {
                 return value;
             }

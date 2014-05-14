@@ -2,9 +2,13 @@ package Aima;
 
 import Model.ChessPiece;
 import Model.Movement;
+import Model.PieceMoveRange;
 import Model.Player;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RadikalChessGame implements Game<RadikalChessState, Movement, Player> {
 
@@ -25,13 +29,21 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     }
 
     @Override
-    public List<Movement> getActions(RadikalChessState state){
-        return null;
+    public List<Movement> getActions(ArrayList<ChessPiece> allPieces){
+        ArrayList<Movement> actions = new ArrayList<>();
+        for (ChessPiece chessPiece : allPieces) {
+            actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, actualState.getChessBoard()));     
+        }
+        return actions;
     }
 
     @Override
-    public RadikalChessState getResult(RadikalChessState state, Movement movement) {
-        return null;
+    public RadikalChessState getResult(RadikalChessState state, Movement action, ArrayList<ChessPiece> allPieces){
+        RadikalChessState result;
+        result = state.clone();
+        result.possibleMove(action, state.getChessBoard(), allPieces, null);
+        return result;
+        
     }
 
     @Override
