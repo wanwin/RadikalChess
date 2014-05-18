@@ -5,8 +5,8 @@ import Model.ChessBoard;
 import Model.ChessPiece;
 import Model.Movement;
 import Model.Pieces.Pawn;
-import Model.Pieces.Queen;
 import Model.Player;
+import Model.Position;
 import Model.ProposeMove;
 import Model.ProposeMoveAttack;
 import java.util.ArrayList;
@@ -30,29 +30,30 @@ public class RadikalChessState implements Cloneable {
         return utility;
     }
 
-    public boolean possibleMove(Movement movement, ChessBoard board, ArrayList<ChessPiece> allPieces,
-            Player player) {
-        if (originCell(movement).getChessPiece().getColour().equals(player.getPlayer())){
+    public boolean possibleMove(Movement movement, ArrayList<ChessPiece> allPieces) {
+        if (originCell(movement).getChessPiece().getColour().equals(player.getPlayerName())) {
             if (ProposeMoveAttack.getInstance().selectMoveAttack(
                     originCell(movement).getChessPiece(), movement, chessBoard)) {
-                player.setPlayer((player.getPlayer().equals("White")) ? "Black" : "White");
+                player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
+                updateAllPieces(allPieces, movement);
                 ChessPiece piece = destinationCell(movement).getChessPiece();
-                //ChessBoardPanel.updateChessPieceIcon(movement, allPieces);//
+                destinationCell(movement).setChessPiece(originCell(movement).getChessPiece());
+                originCell(movement).setChessPiece(null);
                 allPieces.remove(piece);
                 return true;
             }
             if (ProposeMove.getInstance().selectMove(originCell(movement).getChessPiece(),
                     movement, chessBoard)) {
-                if (!isEuclideanDistanceReduced(originCell(movement).getPosition().
-                        calculateEuclideanDistance(allPieces, chessBoard, player.getPlayer()),
-                        destinationCell(movement).getPosition().calculateEuclideanDistance(allPieces, chessBoard, player.getPlayer()))
-                        && !(destinationCell(movement).getChessPiece() instanceof Pawn)) {
+                if (!isEuclideanDistanceReduced(movement.getOrigin(), movement.getDestination(), allPieces) && !(destinationCell(movement).getChessPiece() instanceof Pawn)) {
                     return false;
                 }
-                player.setPlayer((player.getPlayer().equals("White")) ? "Black" : "White");
-                //ChessBoardPanel.updateChessPieceIcon(movement, allPieces);
+                player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
+                updateAllPieces(allPieces, movement);
+                destinationCell(movement).setChessPiece(originCell(movement).getChessPiece());
+                originCell(movement).setChessPiece(null);
                 return true;
             }
+
         }
         return false;
     }
@@ -78,8 +79,8 @@ public class RadikalChessState implements Cloneable {
         return copy;
     }
 
-    public boolean isEuclideanDistanceReduced(int origin, int destination) {
-        return (destination < origin);
+    public boolean isEuclideanDistanceReduced(Position origin, Position destination, ArrayList<ChessPiece> allPieces) {
+        return (destination.calculateEuclideanDistance(allPieces, chessBoard, player.getPlayerName()) < origin.calculateEuclideanDistance(allPieces, chessBoard, player.getPlayerName()));
     }
 
     private Cell originCell(Movement movement) {
@@ -88,5 +89,16 @@ public class RadikalChessState implements Cloneable {
 
     private Cell destinationCell(Movement movement) {
         return chessBoard.getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()];
+    }
+
+    private void updateAllPieces(ArrayList<ChessPiece> allPieces, Movement movement) {
+        for (ChessPiece chessPiece : allPieces) {
+            if (chessPiece.getName().equals(originCell(movement).getChessPiece().getName())
+                    && chessPiece.getColour().equals(originCell(movement).getChessPiece().getColour())
+                    && chessPiece.getPosition().equals(originCell(movement).getChessPiece().getPosition())) {
+                chessPiece.setPosition(destinationCell(movement).getPosition());
+                break;
+            }
+        }
     }
 }

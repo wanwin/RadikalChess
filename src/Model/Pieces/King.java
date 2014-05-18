@@ -12,8 +12,10 @@ public class King extends ChessPiece {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return null;
+    protected King clone() throws CloneNotSupportedException {
+        King copy = new King(getName(), this.getPosition(), this.getColour());
+        copy.setImage(getImage());
+        return copy;
     }
 
     @Override

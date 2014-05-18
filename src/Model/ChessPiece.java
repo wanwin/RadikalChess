@@ -9,7 +9,7 @@ public abstract class ChessPiece {
     }
     private Position position;
     private Image image;
-    private final String colour;
+    private String colour;
 
     public ChessPiece(String name, Position position, String colour) {
         this.name = name;
@@ -40,7 +40,11 @@ public abstract class ChessPiece {
     public String getColour() {
         return colour;
     }
-
+    
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+    
     @Override
     protected abstract Object clone() throws CloneNotSupportedException;
 

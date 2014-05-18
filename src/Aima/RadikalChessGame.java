@@ -1,38 +1,27 @@
 package Aima;
 
+import Aima.Heuristic.HeuristicAttack;
 import Model.ChessPiece;
 import Model.Movement;
 import Model.PieceMoveRange;
 import Model.Player;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RadikalChessGame implements Game<RadikalChessState, Movement, Player> {
 
     private RadikalChessState initialState;
-    private RadikalChessState actualState;
-
-    public RadikalChessState getActualState() {
-        return actualState;
-    }
 
     @Override
     public RadikalChessState getInitialState() {
         return initialState;
     }
 
-    public void setActualState(RadikalChessState actualState) {
-        this.actualState = actualState;
-    }
-
     @Override
-    public List<Movement> getActions(ArrayList<ChessPiece> allPieces){
+    public List<Movement> getActions(RadikalChessState state, ArrayList<ChessPiece> allPieces){
         ArrayList<Movement> actions = new ArrayList<>();
         for (ChessPiece chessPiece : allPieces) {
-            actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, actualState.getChessBoard()));     
+            actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, state));     
         }
         return actions;
     }
@@ -41,7 +30,7 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     public RadikalChessState getResult(RadikalChessState state, Movement action, ArrayList<ChessPiece> allPieces){
         RadikalChessState result;
         result = state.clone();
-        result.possibleMove(action, state.getChessBoard(), allPieces, null);
+        result.possibleMove(action, allPieces);
         return result;
         
     }
@@ -64,11 +53,12 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
 
     @Override
     public Player getPlayer(RadikalChessState state) {
-        return null;
+        return state.getPlayer();
     }
 
     @Override
-    public double getUtility(RadikalChessState state, Player player) {
-        return 0;
+    public double getUtility(RadikalChessState state) {
+        HeuristicAttack heuristic = new HeuristicAttack();
+        return heuristic.getHeuristic(state);
     }
 }

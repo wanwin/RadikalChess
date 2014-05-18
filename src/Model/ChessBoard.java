@@ -11,11 +11,11 @@ public class ChessBoard implements Cloneable {
     }
 
     public int getColumn() {
-        return cell.length;
+        return cell[0].length;
     }
 
     public int getRow() {
-        return cell[0].length;
+        return cell.length;
     }
 
     public Cell[][] getCell() {
@@ -27,9 +27,11 @@ public class ChessBoard implements Cloneable {
         ChessBoard board = new ChessBoard(cell.length, cell[0].length);
         for (int i = 0; i < cell.length; i++) {
             for (int j = 0; j < cell[0].length; j++) {
-                if (cell[i][j].getChessPiece() != null) {
-                    board.cell[i][j].setChessPiece((ChessPiece) cell[i][j].getChessPiece().clone());
+                if (this.cell[i][j].getChessPiece() != null){
+                    board.cell[i][j] = new Cell((ChessPiece)this.cell[i][j].getChessPiece().clone(), new Position(i,j));
                 }
+                else
+                    board.cell[i][j] = new Cell(null, new Position(i,j));
             }
         }
         return board;

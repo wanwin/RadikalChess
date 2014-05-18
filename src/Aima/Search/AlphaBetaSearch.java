@@ -2,7 +2,6 @@ package Aima.Search;
 
 import Aima.Game;
 import Aima.Metrics;
-import Aima.Search.AdversarialSearch;
 import Model.ChessPiece;
 import java.util.ArrayList;
 
@@ -29,7 +28,7 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
         PLAYER player = game.getPlayer(state);
-        for (ACTION action : game.getActions(allPieces)) {
+        for (ACTION action : game.getActions(state, allPieces)) {
             double value = minValue(game.getResult(state, action, allPieces), player,
                     Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, allPieces);
             if (value > resultValue) {
@@ -45,10 +44,10 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
             ArrayList<ChessPiece> allPieces) {
         expandedNodes++;
         if (game.isTerminal(allPieces)) {
-            return game.getUtility(state, player);
+            return game.getUtility(state);
         }
         double value = Double.NEGATIVE_INFINITY;
-        for (ACTION action : game.getActions(allPieces)) {
+        for (ACTION action : game.getActions(state, allPieces)) {
             value = Math.max(value, minValue( //
                     game.getResult(state, action, allPieces), player, alpha, beta, allPieces));
             if (value >= beta) {
@@ -63,10 +62,10 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
             ArrayList<ChessPiece> allPieces) {
         expandedNodes++;
         if (game.isTerminal(allPieces)) {
-            return game.getUtility(state, player);
+            return game.getUtility(state);
         }
         double value = Double.POSITIVE_INFINITY;
-        for (ACTION action : game.getActions(allPieces)) {
+        for (ACTION action : game.getActions(state, allPieces)) {
             value = Math.min(value, maxValue( //
                     game.getResult(state, action, allPieces), player, alpha, beta, allPieces));
             if (value <= alpha) {

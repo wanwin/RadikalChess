@@ -1,5 +1,6 @@
 package UserInterface;
 
+import Aima.RadikalChessState;
 import Main.RadikalChess;
 import Model.ChessPiece;
 import Model.Image;
@@ -25,20 +26,13 @@ public class ChessBoardPanel extends JPanel {
         return cellPanel;
     }
 
-    public void updateChessPieceIcon(Movement movement,
+    public void updateChessPiece(Movement movement,
         ArrayList<ChessPiece> allPieces) {
-        for (ChessPiece chessPiece : allPieces) {
-            if (chessPiece.getName().equals(originCellButton(movement).getCell().getChessPiece().getName())
-                    && chessPiece.getColour().equals(originCellButton(movement).getCell().getChessPiece().getColour())
-                    && chessPiece.getPosition().equals(originCellButton(movement).getCell().getChessPiece().getPosition())){
-                chessPiece.setPosition(destinationCellButton(movement).getCell().getPosition());
-            }
-        }
         destinationCellButton(movement).addPiece(originCellButton(movement));
         originCellButton(movement).removePiece(); 
     }
     
-    public void checkPromotionedPawn(Movement movement, ArrayList<ChessPiece> allPieces) throws IOException {
+    public void checkPromotionedPawn(Movement movement, ArrayList<ChessPiece> allPieces, RadikalChessState state) throws IOException {
         if (destinationCellButton(movement).getCell().getChessPiece() instanceof Pawn
                 && (destinationCellButton(movement).getCell().getChessPiece().getPosition().getRow() == 0
                 && destinationCellButton(movement).getCell().getChessPiece().getColour().equals("White")
@@ -54,6 +48,7 @@ public class ChessBoardPanel extends JPanel {
                     + chessPiece.getColour() + "Queen"
                     + ".png")))));
                     destinationCellButton(movement).getCell().setChessPiece(chessPiece);
+                    state.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].setChessPiece(chessPiece);
                     destinationCellButton(movement).setIcon(new ImageIcon(((SwingBitmap) destinationCellButton(movement).getCell().getChessPiece().getImage().getBitmap()).getBufferedImage()));
                     break;
                 }

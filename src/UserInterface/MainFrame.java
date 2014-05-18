@@ -2,6 +2,9 @@ package UserInterface;
 
 import Aima.RadikalChessGame;
 import Aima.RadikalChessState;
+import Aima.Search.AdversarialSearch;
+import Aima.Search.MinimaxSearch;
+import Model.Cell;
 import Model.ChessBoard;
 import Model.ChessPiece;
 import Model.Image;
@@ -170,6 +173,17 @@ public class MainFrame extends JFrame {
 
     private JButton createProposeMoveButton() {
         JButton proposeMove = new JButton("Propose Move");
+        proposeMove.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e){
+            AdversarialSearch<RadikalChessState, Movement> search;
+            Movement action;
+            search = MinimaxSearch.createFor(radikalChessGame);
+            action = search.makeDecision(currentState, allChessPieces);
+            currentState = radikalChessGame.getResult(currentState, action, allChessPieces);
+            }
+        });
         return proposeMove;
     }
 
@@ -200,11 +214,11 @@ public class MainFrame extends JFrame {
                                 secondClicked = (CellButton) e.getSource();
                                 if (!firstClicked.getCell().getPosition().equals(
                                         secondClicked.getCell().getPosition())) {
-                                        if (currentState.possibleMove(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), 
-                                        currentState.getChessBoard(), allChessPieces, player))
-                                            boardPanel.updateChessPieceIcon(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces);
+                                        if (currentState.possibleMove(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces))
+                                            boardPanel.updateChessPiece(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces);
                                     try {
-                                        boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces);
+                                        boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces, 
+                                                                        currentState);
                                     }
                                     catch (IOException ex) {
                                         Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -269,7 +283,7 @@ public class MainFrame extends JFrame {
         chessBoard = new ChessBoard(row, column);
         for (int i = 0; i < row; i++) {
            for (int j = 0; j < column; j++) {
-                chessBoard.getCell()[i][j] = boardPanel.getBoard()[i][j].getCell();
+                chessBoard.getCell()[i][j] = new Cell(boardPanel.getBoard()[i][j].getCell().getChessPiece(), new Position(i,j));
            }
         }
         currentState = new RadikalChessState(chessBoard, player);
