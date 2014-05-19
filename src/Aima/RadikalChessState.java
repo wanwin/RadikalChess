@@ -62,6 +62,10 @@ public class RadikalChessState implements Cloneable {
         return player;
     }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+    
     public boolean isTerminal() {
         return false;
     }

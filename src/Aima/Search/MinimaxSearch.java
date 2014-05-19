@@ -27,49 +27,47 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         int currentDepth = 0;
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
-        PLAYER player = game.getPlayer(state);
         for (ACTION action : game.getActions(state, allPieces)){
-            double value = minValue(game.getResult(state, action, allPieces), player, allPieces, currentDepth);
+            double value = minValue(game.getResult(state, action, allPieces), allPieces, currentDepth);
             if (value > resultValue){
                 result = action;
                 resultValue = value;
             }
         }
-        currentDepth++;
         totalExpandedNodes += expandedNodes;
         return result;
     }
 
-    public double maxValue(STATE state, PLAYER player, ArrayList<ChessPiece> allPieces, int currentDepth) {
+    public double maxValue(STATE state, ArrayList<ChessPiece> allPieces, int currentDepth) {
         expandedNodes++;
         currentDepth++;
         if (game.isTerminal(allPieces)) {
             return game.getUtility(state);
         }
-        if (currentDepth == 5)
+        if (currentDepth > 4){
             return game.getUtility(state);
+        }    
         double value = Double.NEGATIVE_INFINITY;
         for (ACTION action : game.getActions(state, allPieces)){
-            currentDepth++;
             value = Math.max(value,
-                    minValue(game.getResult(state, action, allPieces), player, allPieces, currentDepth));
+                    minValue(game.getResult(state, action, allPieces), allPieces, currentDepth));
         }
         return value;
     }
 
-    public double minValue(STATE state, PLAYER player, ArrayList<ChessPiece> allPieces, int currentDepth) {
+    public double minValue(STATE state, ArrayList<ChessPiece> allPieces, int currentDepth) {
         expandedNodes++;
         currentDepth++;
         if (game.isTerminal(allPieces)) {
             return game.getUtility(state);
         }
-        if (currentDepth == 5)
+        if (currentDepth > 4){
             return game.getUtility(state);
+        }    
         double value = Double.POSITIVE_INFINITY;
         for (ACTION action : game.getActions(state, allPieces)) {
-            currentDepth++;
             value = Math.min(value,
-                    maxValue(game.getResult(state, action, allPieces), player, allPieces, currentDepth));
+                    maxValue(game.getResult(state, action, allPieces), allPieces, currentDepth));
         }
         return value;
     }

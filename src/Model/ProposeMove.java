@@ -5,7 +5,6 @@ import Model.Pieces.King;
 import Model.Pieces.Pawn;
 import Model.Pieces.Queen;
 import Model.Pieces.Rook;
-import java.util.ArrayList;
 
 public class ProposeMove {
 
@@ -204,19 +203,5 @@ public class ProposeMove {
             return true;
         }
         return false;
-    }
-
-    
-
-    private int calculateRowDistance(int row, int kingRow) {
-        return kingRow - row;
-    }
-
-    private int calculateColumnDistance(int column, int kingColumn) {
-        return kingColumn - column;
-    }
-
-    private int calculateEuclideanDistance(int rowDifference, int columnDifference) {
-        return (int) (Math.pow(rowDifference, 2) + Math.pow(columnDifference, 2));
     }
 }

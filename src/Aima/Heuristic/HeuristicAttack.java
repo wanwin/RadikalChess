@@ -1,7 +1,6 @@
 package Aima.Heuristic;
 
 import Aima.RadikalChessState;
-import Model.ChessPiece;
 
 public class HeuristicAttack implements Heuristic {
 

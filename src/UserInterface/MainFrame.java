@@ -40,7 +40,6 @@ public class MainFrame extends JFrame {
     private Player player = new Player("White");
     private RadikalChessState currentState;
     private RadikalChessGame radikalChessGame = new RadikalChessGame();
-    private ChessBoard chessBoard; 
     
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
             ArrayList<ChessPiece> blackChessPieces,
@@ -181,7 +180,19 @@ public class MainFrame extends JFrame {
             Movement action;
             search = MinimaxSearch.createFor(radikalChessGame);
             action = search.makeDecision(currentState, allChessPieces);
-            currentState = radikalChessGame.getResult(currentState, action, allChessPieces);
+            if (currentState.getPlayer().getPlayerName().equals("Black"))
+                currentState.setPlayer(new Player("White"));
+            else
+                currentState.setPlayer(new Player("Black"));
+            currentState.possibleMove(action, allChessPieces);
+            boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()), allChessPieces);
+                try {
+                    boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()), allChessPieces,
+                                                                                currentState);
+                }
+                catch (IOException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         return proposeMove;
@@ -221,7 +232,6 @@ public class MainFrame extends JFrame {
                                                                         currentState);
                                     }
                                     catch (IOException ex) {
-                                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
                                 buttonPressed = false;
@@ -280,7 +290,7 @@ public class MainFrame extends JFrame {
     }
     
     private void fillBoard(){
-        chessBoard = new ChessBoard(row, column);
+        ChessBoard chessBoard = new ChessBoard(row, column);
         for (int i = 0; i < row; i++) {
            for (int j = 0; j < column; j++) {
                 chessBoard.getCell()[i][j] = new Cell(boardPanel.getBoard()[i][j].getCell().getChessPiece(), new Position(i,j));
