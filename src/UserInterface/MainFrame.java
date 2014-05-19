@@ -20,8 +20,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,11 +38,10 @@ public class MainFrame extends JFrame {
     private Player player = new Player("White");
     private RadikalChessState currentState;
     private RadikalChessGame radikalChessGame = new RadikalChessGame();
-    
+
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
             ArrayList<ChessPiece> blackChessPieces,
-            ArrayList<ChessPiece> allChessPieces,
-            ChessBoard chessBoard) {
+            ArrayList<ChessPiece> allChessPieces) {
         this.whiteChessPieces = whiteChessPieces;
         this.blackChessPieces = blackChessPieces;
         this.allChessPieces = allChessPieces;
@@ -173,25 +170,24 @@ public class MainFrame extends JFrame {
     private JButton createProposeMoveButton() {
         JButton proposeMove = new JButton("Propose Move");
         proposeMove.addActionListener(new ActionListener() {
-
             @Override
-            public void actionPerformed(ActionEvent e){
-            AdversarialSearch<RadikalChessState, Movement> search;
-            Movement action;
-            search = MinimaxSearch.createFor(radikalChessGame);
-            action = search.makeDecision(currentState, allChessPieces);
-            if (currentState.getPlayer().getPlayerName().equals("Black"))
-                currentState.setPlayer(new Player("White"));
-            else
-                currentState.setPlayer(new Player("Black"));
-            currentState.possibleMove(action, allChessPieces);
-            boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()), allChessPieces);
-                try {
-                    boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()), allChessPieces,
-                                                                                currentState);
+            public void actionPerformed(ActionEvent e) {
+                AdversarialSearch<RadikalChessState, Movement> search;
+                Movement action;
+                search = MinimaxSearch.createFor(radikalChessGame);
+                action = search.makeDecision(currentState, allChessPieces);
+                if (currentState.getPlayer().getPlayerName().equals("Black")) {
+                    currentState.setPlayer(new Player("White"));
+                } else {
+                    currentState.setPlayer(new Player("Black"));
                 }
-                catch (IOException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                currentState.possibleMove(action, allChessPieces);
+                boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()), allChessPieces);
+                try {
+                    boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()),
+                            allChessPieces,
+                            currentState);
+                } catch (IOException ex) {
                 }
             }
         });
@@ -220,24 +216,25 @@ public class MainFrame extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         Object source = e.getSource();
                         if (source instanceof CellButton) {
-                            if (!radikalChessGame.isTerminal(allChessPieces))
-                            if (buttonPressed){
-                                secondClicked = (CellButton) e.getSource();
-                                if (!firstClicked.getCell().getPosition().equals(
-                                        secondClicked.getCell().getPosition())) {
-                                        if (currentState.possibleMove(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces))
+                            if (!radikalChessGame.isTerminal(allChessPieces)) {
+                                if (buttonPressed) {
+                                    secondClicked = (CellButton) e.getSource();
+                                    if (!firstClicked.getCell().getPosition().equals(
+                                            secondClicked.getCell().getPosition())) {
+                                        if (currentState.possibleMove(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces)) {
                                             boardPanel.updateChessPiece(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces);
-                                    try {
-                                        boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces, 
-                                                                        currentState);
+                                        }
+                                        try {
+                                            boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces,
+                                                    currentState);
+                                        } catch (IOException ex) {
+                                        }
                                     }
-                                    catch (IOException ex) {
-                                    }
+                                    buttonPressed = false;
+                                } else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
+                                    buttonPressed = true;
+                                    firstClicked = (CellButton) e.getSource();
                                 }
-                                buttonPressed = false;
-                            } else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
-                                buttonPressed = true;
-                                firstClicked = (CellButton) e.getSource();
                             }
                         }
                     }
@@ -249,7 +246,7 @@ public class MainFrame extends JFrame {
         placePieces();
     }
 
-    private void placePieces(){
+    private void placePieces() {
         for (ChessPiece chessPiece : whiteChessPieces) {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
         }
@@ -257,7 +254,7 @@ public class MainFrame extends JFrame {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
         }
     }
-    
+
     private void paintCell(boolean blackFirst, int j, CellButton cell) {
         if (blackFirst) {
             if (j % 2 == 0) {
@@ -288,18 +285,18 @@ public class MainFrame extends JFrame {
     private Icon convertImageToImageIcon(Image image) {
         return new ImageIcon(((SwingBitmap) image.getBitmap()).getBufferedImage());
     }
-    
-    private void fillBoard(){
+
+    private void fillBoard() {
         ChessBoard chessBoard = new ChessBoard(row, column);
         for (int i = 0; i < row; i++) {
-           for (int j = 0; j < column; j++) {
-                chessBoard.getCell()[i][j] = new Cell(boardPanel.getBoard()[i][j].getCell().getChessPiece(), new Position(i,j));
-           }
+            for (int j = 0; j < column; j++) {
+                chessBoard.getCell()[i][j] = new Cell(boardPanel.getBoard()[i][j].getCell().getChessPiece(), new Position(i, j));
+            }
         }
         currentState = new RadikalChessState(chessBoard, player);
     }
-    
-    private Movement createMovement(Position origin, Position destination){
+
+    private Movement createMovement(Position origin, Position destination) {
         return new Movement(origin, destination);
     }
 }

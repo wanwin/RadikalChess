@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class RadikalChess {
 
-    public static final String filename = "C:\\Users\\Darwin\\Desktop\\Fichas";
+    public static final String filename = "C:\\Users\\usuario\\Desktop\\Fichas";
     private MainFrame frame;
     
     public static void main(String[] args) {
@@ -20,13 +20,12 @@ public class RadikalChess {
         ArrayList<ChessPiece> whiteChessPiece = new ChessPieceLoader(filename).load("White");
         ArrayList<ChessPiece> blackChessPiece = new ChessPieceLoader(filename).load("Black");
         ArrayList<ChessPiece> allChessPieces = new ArrayList<>();
-        ChessBoard chessBoard = new ChessBoard(6, 4);
         for (ChessPiece chessPiece : whiteChessPiece) {
             allChessPieces.add(chessPiece);
         }
         for (ChessPiece chessPiece : blackChessPiece) {
             allChessPieces.add(chessPiece);
         }
-        frame = new MainFrame(whiteChessPiece, blackChessPiece, allChessPieces, chessBoard);
+        frame = new MainFrame(whiteChessPiece, blackChessPiece, allChessPieces);
     }
 }

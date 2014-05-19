@@ -21,7 +21,7 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     public List<Movement> getActions(RadikalChessState state, ArrayList<ChessPiece> allPieces){
         ArrayList<Movement> actions = new ArrayList<>();
         for (ChessPiece chessPiece : allPieces) {
-            actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, state));     
+            actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, state, allPieces));     
         }
         return actions;
     }

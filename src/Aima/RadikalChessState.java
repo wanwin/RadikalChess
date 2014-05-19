@@ -36,10 +36,9 @@ public class RadikalChessState implements Cloneable {
                     originCell(movement).getChessPiece(), movement, chessBoard)) {
                 player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
                 updateAllPieces(allPieces, movement);
-                ChessPiece piece = destinationCell(movement).getChessPiece();
+                allPieces.remove(destinationCell(movement));
                 destinationCell(movement).setChessPiece(originCell(movement).getChessPiece());
                 originCell(movement).setChessPiece(null);
-                allPieces.remove(piece);
                 return true;
             }
             if (ProposeMove.getInstance().selectMove(originCell(movement).getChessPiece(),
@@ -65,10 +64,6 @@ public class RadikalChessState implements Cloneable {
     public void setPlayer(Player player) {
         this.player = player;
     }
-    
-    public boolean isTerminal() {
-        return false;
-    }
 
     @Override
     protected RadikalChessState clone() {
@@ -76,15 +71,15 @@ public class RadikalChessState implements Cloneable {
         try {
             copy = (RadikalChessState) super.clone();
             copy.chessBoard = chessBoard.clone();
-        }
-        catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        } catch (CloneNotSupportedException e) {
         }
         return copy;
     }
 
-    public boolean isEuclideanDistanceReduced(Position origin, Position destination, ArrayList<ChessPiece> allPieces) {
-        return (destination.calculateEuclideanDistance(allPieces, chessBoard, player.getPlayerName()) < origin.calculateEuclideanDistance(allPieces, chessBoard, player.getPlayerName()));
+    public boolean isEuclideanDistanceReduced(Position origin, Position destination,
+            ArrayList<ChessPiece> allPieces) {
+        return (destination.calculateEuclideanDistance(allPieces, chessBoard, player.getPlayerName())
+                < origin.calculateEuclideanDistance(allPieces, chessBoard, player.getPlayerName()));
     }
 
     private Cell originCell(Movement movement) {
@@ -95,7 +90,7 @@ public class RadikalChessState implements Cloneable {
         return chessBoard.getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()];
     }
 
-    private void updateAllPieces(ArrayList<ChessPiece> allPieces, Movement movement) {
+    private void updateAllPieces(ArrayList<ChessPiece> allPieces, Movement movement){
         for (ChessPiece chessPiece : allPieces) {
             if (chessPiece.getName().equals(originCell(movement).getChessPiece().getName())
                     && chessPiece.getColour().equals(originCell(movement).getChessPiece().getColour())
