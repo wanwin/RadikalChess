@@ -35,9 +35,9 @@ public class ChessBoardPanel extends JPanel {
     public void checkPromotionedPawn(Movement movement, ArrayList<ChessPiece> allPieces, RadikalChessState state) throws IOException {
         if (destinationCellButton(movement).getCell().getChessPiece() instanceof Pawn
                 && (destinationCellButton(movement).getCell().getChessPiece().getPosition().getRow() == 0
-                && destinationCellButton(movement).getCell().getChessPiece().getColour().equals("White")
                 || destinationCellButton(movement).getCell().getChessPiece().getPosition().getRow()
-                == cellPanel.length - 1 && destinationCellButton(movement).getCell().getChessPiece().getColour().equals("Black"))) {
+                == cellPanel.length - 1) && 
+                destinationCellButton(movement).getCell().getChessPiece() instanceof Pawn) {
             for (ChessPiece chessPiece : allPieces) {
                 if (chessPiece.getName().equals(destinationCellButton(movement).getCell().getChessPiece().getName())
                         && chessPiece.getColour().equals(destinationCellButton(movement).getCell().getChessPiece().getColour())

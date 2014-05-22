@@ -12,8 +12,8 @@ public class Bishop extends ChessPiece {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Bishop copy = new Bishop(getName(), this.getPosition(), this.getColour());
+    public Bishop clone(){
+        Bishop copy = new Bishop(getName(), new Position(this.getPosition().getRow(), this.getPosition().getColumn()), this.getColour());
         copy.setImage(getImage());
         return copy;
     }

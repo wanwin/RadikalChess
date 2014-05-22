@@ -12,8 +12,8 @@ public class Queen extends ChessPiece {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Queen copy = new Queen(getName(), this.getPosition(), this.getColour());
+    public Queen clone(){
+        Queen copy = new Queen(getName(), new Position(this.getPosition().getRow(), this.getPosition().getColumn()), this.getColour());
         copy.setImage(getImage());
         return copy;
     }

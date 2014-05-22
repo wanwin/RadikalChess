@@ -27,6 +27,30 @@ public class Position {
     public void setColumn(int column) {
         this.column = column;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Position other = (Position) obj;
+        if (this.row != other.row) {
+            return false;
+        }
+        if (this.column != other.column) {
+            return false;
+        }
+        return true;
+    }
     
     public int calculateEuclideanDistance(ArrayList<ChessPiece> allPieces, ChessBoard chessBoard, String colour) {
         if (chessBoard.searchKingPosition(allPieces, colour) != null){

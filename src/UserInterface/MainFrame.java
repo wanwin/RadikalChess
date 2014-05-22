@@ -176,18 +176,14 @@ public class MainFrame extends JFrame {
                 Movement action;
                 search = MinimaxSearch.createFor(radikalChessGame);
                 action = search.makeDecision(currentState, allChessPieces);
-                if (currentState.getPlayer().getPlayerName().equals("Black")) {
-                    currentState.setPlayer(new Player("White"));
-                } else {
-                    currentState.setPlayer(new Player("Black"));
-                }
+                player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
                 currentState.possibleMove(action, allChessPieces);
                 boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()), allChessPieces);
                 try {
                     boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()),
                             allChessPieces,
                             currentState);
-                } catch (IOException ex) {
+                } catch (IOException ex){
                 }
             }
         });

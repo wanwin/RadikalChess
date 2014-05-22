@@ -12,8 +12,8 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Pawn copy = new Pawn(getName(), this.getPosition(), this.getColour());
+    public Pawn clone(){
+        Pawn copy = new Pawn(getName(), new Position(this.getPosition().getRow(), this.getPosition().getColumn()), this.getColour());
         copy.setImage(getImage());
         return copy;
     }

@@ -28,7 +28,9 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
         for (ACTION action : game.getActions(state, allPieces)) {
-            double value = minValue(game.getResult(state, action, allPieces), allPieces, currentDepth);
+            double value = minValue(game.getResult(state, action, 
+                    cloneAllPieces(allPieces)), cloneAllPieces(allPieces), 
+                    currentDepth);
             if (value > resultValue) {
                 result = action;
                 resultValue = value;
@@ -44,14 +46,14 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         if (game.isTerminal(allPieces)) {
             return game.getUtility(state);
         }
-        if (currentDepth > 4) {
+        if (currentDepth > 0) {
             return game.getUtility(state);
         }
         double value = Double.NEGATIVE_INFINITY;
         for (ACTION action : game.getActions(state, allPieces)) {
             value = Math.max(value,
-                    minValue(game.getResult(state, action, cloneChessBoard(allPieces)),
-                    cloneChessBoard(allPieces), currentDepth));
+                    minValue(game.getResult(state, action, cloneAllPieces(allPieces)),
+                    cloneAllPieces(allPieces), currentDepth));
         }
         return value;
     }
@@ -62,14 +64,14 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         if (game.isTerminal(allPieces)) {
             return game.getUtility(state);
         }
-        if (currentDepth > 4) {
+        if (currentDepth > 0) {
             return game.getUtility(state);
         }
         double value = Double.POSITIVE_INFINITY;
         for (ACTION action : game.getActions(state, allPieces)) {
             value = Math.min(value,
-                    maxValue(game.getResult(state, action, cloneChessBoard(allPieces)),
-                    cloneChessBoard(allPieces), currentDepth));
+                    maxValue(game.getResult(state, action, cloneAllPieces(allPieces)),
+                    cloneAllPieces(allPieces), currentDepth));
         }
         return value;
     }
@@ -86,11 +88,11 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         return totalExpandedNodes;
     }
     
-    private ArrayList<ChessPiece> cloneChessBoard(ArrayList<ChessPiece> allPieces){
-        ArrayList<ChessPiece> allPiecesClone = new ArrayList<>();
-        for (ChessPiece chessPiece : allPiecesClone) {
-            allPiecesClone.add(chessPiece);
+    private ArrayList<ChessPiece> cloneAllPieces(ArrayList<ChessPiece> allPieces){
+        ArrayList<ChessPiece> copy = new ArrayList<>();
+        for (ChessPiece chessPiece : allPieces) {
+            copy.add(chessPiece.clone());
         }
-        return allPiecesClone;
+        return copy;
     }
 }

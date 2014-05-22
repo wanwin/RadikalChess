@@ -46,7 +46,7 @@ public abstract class ChessPiece {
     }
     
     @Override
-    protected abstract Object clone() throws CloneNotSupportedException;
+    public abstract ChessPiece clone();
 
     public abstract int getValue();
 }

@@ -1,6 +1,5 @@
 package Main;
 
-import Model.ChessBoard;
 import Model.ChessPiece;
 import Persistence.ChessPieceLoader;
 import UserInterface.MainFrame;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 public class RadikalChess {
 
     public static final String filename = "C:\\Users\\usuario\\Desktop\\Fichas";
+    //public static final String filename = "C:\\Users\\Darwin\\Desktop\\Fichas";
     private MainFrame frame;
     
     public static void main(String[] args) {

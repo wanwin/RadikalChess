@@ -32,7 +32,6 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
         result = state.clone();
         result.possibleMove(action, allPieces);
         return result;
-        
     }
 
     @Override
