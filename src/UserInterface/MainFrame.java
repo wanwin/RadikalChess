@@ -172,18 +172,21 @@ public class MainFrame extends JFrame {
         proposeMove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AdversarialSearch<RadikalChessState, Movement> search;
-                Movement action;
-                search = MinimaxSearch.createFor(radikalChessGame);
-                action = search.makeDecision(currentState, allChessPieces);
-                player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
-                currentState.possibleMove(action, allChessPieces);
-                boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()), allChessPieces);
-                try {
-                    boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()),
-                            allChessPieces,
-                            currentState);
-                } catch (IOException ex){
+                if (!radikalChessGame.isTerminal(allChessPieces)) {
+                    AdversarialSearch<RadikalChessState, Movement> search;
+                    Movement action;
+                    search = MinimaxSearch.createFor(radikalChessGame);
+                    Player actualPlayer = new Player(currentState.getPlayer().getPlayerName());
+                    action = search.makeDecision(currentState, allChessPieces);
+                    currentState.setPlayer(actualPlayer);
+                    currentState.possibleMove(action, allChessPieces);
+                    boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()), allChessPieces);
+                    try {
+                        boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()),
+                                allChessPieces,
+                                currentState);
+                    } catch (IOException ex) {
+                    }
                 }
             }
         });

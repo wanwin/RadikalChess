@@ -376,7 +376,7 @@ public class PieceMoveRange {
                 }
             }
             if (chessPiece.getPosition().getRow() + 1 < state.getChessBoard().getRow()
-                    && chessPiece.getPosition().getColumn() + 1 <= state.getChessBoard().getColumn()) {
+                    && chessPiece.getPosition().getColumn() + 1 < state.getChessBoard().getColumn()) {
                 if (ProposeMove.getInstance().selectMove(chessPiece, new Movement(chessPiece.getPosition(),
                         new Position(chessPiece.getPosition().getRow() + 1, chessPiece.getPosition().getColumn() + 1)), 
                         state.getChessBoard())

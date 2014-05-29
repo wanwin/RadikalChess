@@ -18,16 +18,16 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     }
 
     @Override
-    public List<Movement> getActions(RadikalChessState state, ArrayList<ChessPiece> allPieces){
+    public List<Movement> getActions(RadikalChessState state, ArrayList<ChessPiece> allPieces) {
         ArrayList<Movement> actions = new ArrayList<>();
         for (ChessPiece chessPiece : allPieces) {
-            actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, state, allPieces));     
+            actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, state, allPieces));    
         }
         return actions;
     }
 
     @Override
-    public RadikalChessState getResult(RadikalChessState state, Movement action, ArrayList<ChessPiece> allPieces){
+    public RadikalChessState getResult(RadikalChessState state, Movement action, ArrayList<ChessPiece> allPieces) {
         RadikalChessState result;
         result = state.clone();
         result.possibleMove(action, allPieces);

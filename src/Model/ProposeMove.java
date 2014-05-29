@@ -68,7 +68,7 @@ public class ProposeMove {
     private boolean moveKing(Movement movement, ChessBoard chessBoard) {
         if (chessBoard.getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece() == null
                 && movement.getOrigin().getRow() - movement.getDestination().getRow() == -1
-                && movement.getOrigin().getColumn() - movement.getDestination().getColumn() == 0) {
+                && movement.getOrigin().getColumn() - movement.getDestination().getColumn() == 0){
             return true;
         }
         if (chessBoard.getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece() == null

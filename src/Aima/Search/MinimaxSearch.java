@@ -2,6 +2,7 @@ package Aima.Search;
 
 import Aima.Game;
 import Aima.Metrics;
+import Aima.RadikalChessState;
 import Model.ChessPiece;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         double resultValue = Double.NEGATIVE_INFINITY;
         for (ACTION action : game.getActions(state, allPieces)) {
             double value = minValue(game.getResult(state, action, 
-                    cloneAllPieces(allPieces)), cloneAllPieces(allPieces), 
+                    allPieces), cloneAllPieces(allPieces), 
                     currentDepth);
             if (value > resultValue) {
                 result = action;
@@ -46,13 +47,17 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         if (game.isTerminal(allPieces)) {
             return game.getUtility(state);
         }
-        if (currentDepth > 0) {
+        if (currentDepth > 3) {
+            if (((RadikalChessState)state).getPlayer().getPlayerName().equals("Black"))
+                ((RadikalChessState)state).getPlayer().setPlayer("White");
+            else
+                ((RadikalChessState)state).getPlayer().setPlayer("Black");
             return game.getUtility(state);
         }
         double value = Double.NEGATIVE_INFINITY;
         for (ACTION action : game.getActions(state, allPieces)) {
             value = Math.max(value,
-                    minValue(game.getResult(state, action, cloneAllPieces(allPieces)),
+                    minValue(game.getResult(state, action, allPieces),
                     cloneAllPieces(allPieces), currentDepth));
         }
         return value;
@@ -64,13 +69,17 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         if (game.isTerminal(allPieces)) {
             return game.getUtility(state);
         }
-        if (currentDepth > 0) {
+        if (currentDepth > 3) {
+            if (((RadikalChessState)state).getPlayer().getPlayerName().equals("Black"))
+                ((RadikalChessState)state).getPlayer().setPlayer("White");
+            else
+                ((RadikalChessState)state).getPlayer().setPlayer("Black");
             return game.getUtility(state);
         }
         double value = Double.POSITIVE_INFINITY;
         for (ACTION action : game.getActions(state, allPieces)) {
             value = Math.min(value,
-                    maxValue(game.getResult(state, action, cloneAllPieces(allPieces)),
+                    maxValue(game.getResult(state, action, allPieces),
                     cloneAllPieces(allPieces), currentDepth));
         }
         return value;
