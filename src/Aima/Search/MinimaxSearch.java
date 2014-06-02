@@ -45,11 +45,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         if (game.isTerminal(state)) {
             return game.getUtility(state);
         }
-        if (currentDepth > 7) {
-            if (((RadikalChessState)state).getPlayer().getPlayerName().equals("Black"))
-                ((RadikalChessState)state).getPlayer().setPlayer("White");
-            else
-                ((RadikalChessState)state).getPlayer().setPlayer("Black");
+        if (currentDepth > 5) {
             return game.getUtility(state);
         }
         double value = Double.NEGATIVE_INFINITY;
@@ -66,11 +62,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         if (game.isTerminal(state)) {
             return game.getUtility(state);
         }
-        if (currentDepth > 7) {
-            if (((RadikalChessState)state).getPlayer().getPlayerName().equals("Black"))
-                ((RadikalChessState)state).getPlayer().setPlayer("White");
-            else
-                ((RadikalChessState)state).getPlayer().setPlayer("Black");
+        if (currentDepth > 5) {
             return game.getUtility(state);
         }
         double value = Double.POSITIVE_INFINITY;

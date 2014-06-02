@@ -5,7 +5,7 @@ import Model.Position;
 
 public class King extends ChessPiece {
 
-    private final int value = 40000;
+    private final int value = 10000;
 
     public King(String name, Position position, String colour) {
         super(name, position, colour);

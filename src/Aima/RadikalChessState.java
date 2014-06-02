@@ -55,29 +55,26 @@ public class RadikalChessState implements Cloneable {
         return false;
     }
 
-    public boolean mark(Movement movement) {
+    public void mark(Movement movement) {
         if (originCell(movement).getChessPiece().getColour().equals(player.getPlayerName())) {
             if (destinationCell(movement).getChessPiece() != null) {
                 originCell(movement).getChessPiece().setPosition(movement.getDestination());
                 destinationCell(movement).setChessPiece(originCell(movement).getChessPiece());
                 originCell(movement).setChessPiece(null);
                 player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
-                return true;
             }
             if (destinationCell(movement).getChessPiece() == null) {
                 if (!isEuclideanDistanceReduced(movement.getOrigin(), movement.getDestination())
-                        && !(destinationCell(movement).getChessPiece() instanceof Pawn)) {
-                    return false;
+                        && !(originCell(movement).getChessPiece() instanceof Pawn)) {
+                    return;
                 }
                 originCell(movement).getChessPiece().setPosition(movement.getDestination());
                 destinationCell(movement).setChessPiece(originCell(movement).getChessPiece());
                 originCell(movement).setChessPiece(null);
                 player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
-                return true;
             }
 
         }
-        return false;
     }
 
     public Player getPlayer() {
