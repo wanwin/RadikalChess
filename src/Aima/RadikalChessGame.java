@@ -18,28 +18,34 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     }
 
     @Override
-    public List<Movement> getActions(RadikalChessState state, ArrayList<ChessPiece> allPieces) {
+    public List<Movement> getActions(RadikalChessState state) {
         ArrayList<Movement> actions = new ArrayList<>();
-        for (ChessPiece chessPiece : allPieces) {
-            actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, state, allPieces));    
+        for (int i = 0; i < state.getChessBoard().getRow(); i++) {
+            for (int j = 0; j < state.getChessBoard().getColumn(); j++){
+                if (state.getChessBoard().getCell()[i][j].getChessPiece() != null)
+                 actions.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), state));   
+            }
         }
         return actions;
     }
 
     @Override
-    public RadikalChessState getResult(RadikalChessState state, Movement action, ArrayList<ChessPiece> allPieces) {
+    public RadikalChessState getResult(RadikalChessState state, Movement action) {
         RadikalChessState result;
         result = state.clone();
-        result.possibleMove(action, allPieces);
+        result.mark(action);
         return result;
     }
 
     @Override
-    public boolean isTerminal(ArrayList<ChessPiece> allPieces) {
+    public boolean isTerminal(RadikalChessState state) {
         int numberOfKings = 0;
-        for (ChessPiece chessPiece : allPieces) {
-            if (chessPiece.getName().equals("King")) {
-                numberOfKings++;
+        for (int i = 0; i < state.getChessBoard().getRow(); i++) {
+            for (int j = 0; j < state.getChessBoard().getColumn(); j++) {
+                if (state.getChessBoard().getCell()[i][j].getChessPiece() != null) {
+                    if (state.getChessBoard().getCell()[i][j].getChessPiece().getName().equals("King"))
+                        numberOfKings++;
+                }
             }
         }
         return (numberOfKings != 2);

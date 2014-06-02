@@ -22,23 +22,22 @@ public class PieceMoveRange {
         return instance;
     }
 
-    public ArrayList<Movement> selectMove(ChessPiece chessPiece, RadikalChessState state,
-            ArrayList<ChessPiece> allPieces) {
+    public ArrayList<Movement> selectMove(ChessPiece chessPiece, RadikalChessState state) {
         ArrayList<Movement> moveList = new ArrayList<>();
         if (chessPiece instanceof Pawn) {
             moveRangePawn(chessPiece, state, moveList);
         }
         if (chessPiece instanceof Rook) {
-            moveRangeRook(chessPiece, state, moveList, allPieces);
+            moveRangeRook(chessPiece, state, moveList);
         }
         if (chessPiece instanceof Bishop) {
-            moveRangeBishop(chessPiece, state, moveList, allPieces);
+            moveRangeBishop(chessPiece, state, moveList);
         }
         if (chessPiece instanceof Queen) {
-            moveRangeQueen(chessPiece, state, moveList, allPieces);
+            moveRangeQueen(chessPiece, state, moveList);
         }
         if (chessPiece instanceof King) {
-            moveRangeKing(chessPiece, state, moveList, allPieces);
+            moveRangeKing(chessPiece, state, moveList);
         }
         return moveList;
     }
@@ -104,8 +103,7 @@ public class PieceMoveRange {
         }
     }
 
-    private void moveRangeRook(ChessPiece chessPiece, RadikalChessState state, ArrayList<Movement> moveList,
-            ArrayList<ChessPiece> allPieces) {
+    private void moveRangeRook(ChessPiece chessPiece, RadikalChessState state, ArrayList<Movement> moveList) {
         if (chessPiece.getColour().equals(state.getPlayer().getPlayerName())) {
             for (int i = 0; i < state.getChessBoard().getRow(); i++) {
                 if (ProposeMove.getInstance().selectMove(chessPiece, new Movement(chessPiece.getPosition(),
@@ -114,7 +112,7 @@ public class PieceMoveRange {
                         new Movement(chessPiece.getPosition(),
                         new Position(i, chessPiece.getPosition().getColumn())), state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
-                            new Position(i, chessPiece.getPosition().getColumn()), allPieces)) {
+                            new Position(i, chessPiece.getPosition().getColumn()))) {
                         moveList.add(new Movement(chessPiece.getPosition(),
                                 new Position(i, chessPiece.getPosition().getColumn())));
                     }
@@ -129,7 +127,7 @@ public class PieceMoveRange {
                         new Movement(chessPiece.getPosition(),
                         new Position(chessPiece.getPosition().getRow(), i)), state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
-                            new Position(chessPiece.getPosition().getRow(), i), allPieces)) {
+                            new Position(chessPiece.getPosition().getRow(), i))) {
                         moveList.add(new Movement(chessPiece.getPosition(),
                                 new Position(chessPiece.getPosition().getRow(), i)));
                     }
@@ -140,8 +138,7 @@ public class PieceMoveRange {
         }
     }
 
-    private void moveRangeBishop(ChessPiece chessPiece, RadikalChessState state, ArrayList<Movement> moveList,
-            ArrayList<ChessPiece> allPieces) {
+    private void moveRangeBishop(ChessPiece chessPiece, RadikalChessState state, ArrayList<Movement> moveList) {
         if (chessPiece.getColour().equals(state.getPlayer().getPlayerName())) {
             for (int i = 0; i < state.getChessBoard().getRow(); i++) {
                 if (chessPiece.getPosition().getRow() + i < state.getChessBoard().getRow()
@@ -155,7 +152,7 @@ public class PieceMoveRange {
                             + i)), state.getChessBoard())) {
                         if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
                                 new Position(chessPiece.getPosition().getRow() + i,
-                                chessPiece.getPosition().getColumn() + i), allPieces)) {
+                                chessPiece.getPosition().getColumn() + i))) {
                             moveList.add(new Movement(chessPiece.getPosition(),
                                     new Position(chessPiece.getPosition().getRow() + i,
                                     chessPiece.getPosition().getColumn() + i)));
@@ -179,7 +176,7 @@ public class PieceMoveRange {
                             - i)), state.getChessBoard())) {
                         if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
                                 new Position(chessPiece.getPosition().getRow() + i,
-                                chessPiece.getPosition().getColumn() - i), allPieces)) {
+                                chessPiece.getPosition().getColumn() - i))) {
                             moveList.add(new Movement(chessPiece.getPosition(),
                                     new Position(chessPiece.getPosition().getRow() + i,
                                     chessPiece.getPosition().getColumn() - i)));
@@ -204,7 +201,7 @@ public class PieceMoveRange {
                             + i)), state.getChessBoard())) {
                         if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
                                 new Position(chessPiece.getPosition().getRow() - i,
-                                chessPiece.getPosition().getColumn() + i), allPieces)) {
+                                chessPiece.getPosition().getColumn() + i))) {
                             moveList.add(new Movement(chessPiece.getPosition(),
                                     new Position(chessPiece.getPosition().getRow() - i,
                                     chessPiece.getPosition().getColumn() + i)));
@@ -229,7 +226,7 @@ public class PieceMoveRange {
                             - i)), state.getChessBoard())) {
                         if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
                                 new Position(chessPiece.getPosition().getRow() - i,
-                                chessPiece.getPosition().getColumn() - i), allPieces)) {
+                                chessPiece.getPosition().getColumn() - i))) {
                             moveList.add(new Movement(chessPiece.getPosition(),
                                     new Position(chessPiece.getPosition().getRow() - i,
                                     chessPiece.getPosition().getColumn() - i)));
@@ -244,14 +241,12 @@ public class PieceMoveRange {
         }
     }
 
-    private void moveRangeQueen(ChessPiece chessPiece, RadikalChessState state, ArrayList<Movement> moveList,
-            ArrayList<ChessPiece> allPieces) {
-        moveRangeRook(chessPiece, state, moveList, allPieces);
-        moveRangeBishop(chessPiece, state, moveList, allPieces);
+    private void moveRangeQueen(ChessPiece chessPiece, RadikalChessState state, ArrayList<Movement> moveList) {
+        moveRangeRook(chessPiece, state, moveList);
+        moveRangeBishop(chessPiece, state, moveList);
     }
 
-    private void moveRangeKing(ChessPiece chessPiece, RadikalChessState state, ArrayList<Movement> moveList,
-            ArrayList<ChessPiece> allPieces) {
+    private void moveRangeKing(ChessPiece chessPiece, RadikalChessState state, ArrayList<Movement> moveList) {
         if (chessPiece.getColour().equals(state.getPlayer().getPlayerName())) {
             if (chessPiece.getPosition().getRow() + 1 < state.getChessBoard().getRow()) {
                 if (ProposeMove.getInstance().selectMove(chessPiece, new Movement(chessPiece.getPosition(),
@@ -262,8 +257,7 @@ public class PieceMoveRange {
                         new Position(chessPiece.getPosition().getRow() + 1, chessPiece.getPosition().getColumn())),
                         state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
-                            new Position(chessPiece.getPosition().getRow() + 1, chessPiece.getPosition().getColumn()),
-                            allPieces)) {
+                            new Position(chessPiece.getPosition().getRow() + 1, chessPiece.getPosition().getColumn()))) {
                         moveList.add(new Movement(chessPiece.getPosition(),
                                 new Position(chessPiece.getPosition().getRow()
                                 + 1, chessPiece.getPosition().getColumn())));
@@ -281,7 +275,7 @@ public class PieceMoveRange {
                         state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
                             new Position(chessPiece.getPosition().getRow() + 1, chessPiece.getPosition().getColumn()
-                            - 1), allPieces)) {
+                            - 1))) {
                         moveList.add(new Movement(chessPiece.getPosition(),
                                 new Position(chessPiece.getPosition().getRow()
                                 + 1, chessPiece.getPosition().getColumn() - 1)));
@@ -297,8 +291,7 @@ public class PieceMoveRange {
                         new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() - 1)), 
                         state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
-                            new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() - 1), 
-                            allPieces)) {
+                            new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() - 1))) {
                         moveList.add(new Movement(chessPiece.getPosition(), 
                                 new Position(chessPiece.getPosition().getRow(),
                                 chessPiece.getPosition().getColumn() - 1)));
@@ -316,7 +309,7 @@ public class PieceMoveRange {
                         state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
                             new Position(chessPiece.getPosition().getRow() - 1, chessPiece.getPosition().getColumn() 
-                            - 1), allPieces)) {
+                            - 1))) {
                         moveList.add(new Movement(chessPiece.getPosition(), 
                                 new Position(chessPiece.getPosition().getRow()
                                 - 1, chessPiece.getPosition().getColumn() - 1)));
@@ -332,8 +325,7 @@ public class PieceMoveRange {
                         new Position(chessPiece.getPosition().getRow() - 1, chessPiece.getPosition().getColumn())), 
                         state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
-                            new Position(chessPiece.getPosition().getRow() - 1, chessPiece.getPosition().getColumn()), 
-                            allPieces)) {
+                            new Position(chessPiece.getPosition().getRow() - 1, chessPiece.getPosition().getColumn()))) {
                         moveList.add(new Movement(chessPiece.getPosition(), 
                                 new Position(chessPiece.getPosition().getRow()
                                 - 1, chessPiece.getPosition().getColumn())));
@@ -351,7 +343,7 @@ public class PieceMoveRange {
                         state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
                             new Position(chessPiece.getPosition().getRow() - 1, chessPiece.getPosition().getColumn() 
-                            + 1), allPieces)) {
+                            + 1))) {
                         moveList.add(new Movement(chessPiece.getPosition(), 
                                 new Position(chessPiece.getPosition().getRow()
                                 - 1, chessPiece.getPosition().getColumn() + 1)));
@@ -367,8 +359,7 @@ public class PieceMoveRange {
                         new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() + 1)), 
                         state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
-                            new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() + 1), 
-                            allPieces)) {
+                            new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() + 1))) {
                         moveList.add(new Movement(chessPiece.getPosition(), 
                                 new Position(chessPiece.getPosition().getRow(),
                                 chessPiece.getPosition().getColumn() + 1)));
@@ -386,7 +377,7 @@ public class PieceMoveRange {
                         state.getChessBoard())) {
                     if (state.isEuclideanDistanceReduced(chessPiece.getPosition(),
                             new Position(chessPiece.getPosition().getRow() + 1, chessPiece.getPosition().getColumn() 
-                            + 1), allPieces)) {
+                            + 1))) {
                         moveList.add(new Movement(chessPiece.getPosition(), 
                                 new Position(chessPiece.getPosition().getRow()
                                 + 1, chessPiece.getPosition().getColumn() + 1)));

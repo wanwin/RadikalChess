@@ -28,9 +28,9 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
         PLAYER player = game.getPlayer(state);
-        for (ACTION action : game.getActions(state, allPieces)) {
-            double value = minValue(game.getResult(state, action, allPieces), player,
-                    Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, allPieces);
+        for (ACTION action : game.getActions(state)) {
+            double value = minValue(game.getResult(state, action), player,
+                    Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
             if (value > resultValue) {
                 result = action;
                 resultValue = value;
@@ -40,16 +40,15 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
         return result;
     }
 
-    public double maxValue(STATE state, PLAYER player, double alpha, double beta, 
-            ArrayList<ChessPiece> allPieces) {
+    public double maxValue(STATE state, PLAYER player, double alpha, double beta) {
         expandedNodes++;
-        if (game.isTerminal(allPieces)) {
+        if (game.isTerminal(state)) {
             return game.getUtility(state);
         }
         double value = Double.NEGATIVE_INFINITY;
-        for (ACTION action : game.getActions(state, allPieces)) {
-            value = Math.max(value, minValue( //
-                    game.getResult(state, action, allPieces), player, alpha, beta, allPieces));
+        for (ACTION action : game.getActions(state)) {
+            value = Math.max(value, minValue( 
+                    game.getResult(state, action), player, alpha, beta));
             if (value >= beta) {
                 return value;
             }
@@ -58,16 +57,15 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
         return value;
     }
 
-    public double minValue(STATE state, PLAYER player, double alpha, double beta,
-            ArrayList<ChessPiece> allPieces) {
+    public double minValue(STATE state, PLAYER player, double alpha, double beta) {
         expandedNodes++;
-        if (game.isTerminal(allPieces)) {
+        if (game.isTerminal(state)) {
             return game.getUtility(state);
         }
         double value = Double.POSITIVE_INFINITY;
-        for (ACTION action : game.getActions(state, allPieces)) {
-            value = Math.min(value, maxValue( //
-                    game.getResult(state, action, allPieces), player, alpha, beta, allPieces));
+        for (ACTION action : game.getActions(state)) {
+            value = Math.min(value, maxValue( 
+                    game.getResult(state, action), player, alpha, beta));
             if (value <= alpha) {
                 return value;
             }

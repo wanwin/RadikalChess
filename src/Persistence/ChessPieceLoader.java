@@ -30,11 +30,11 @@ public class ChessPieceLoader {
     }
 
     private void createPieces(String colour) {
-        //createPawn(colour);
+        createPawn(colour);
         createKing(colour);
-        //createQueen(colour);
-        //createBishop(colour);
-        //createRook(colour);
+        createQueen(colour);
+        createBishop(colour);
+        createRook(colour);
     }
 
     private void createPawn(String colour) {
@@ -55,11 +55,11 @@ public class ChessPieceLoader {
     private void createKing(String colour) {
         if ("white".equals(colour.toLowerCase())) {
             chessPieceSet.add(new King("King", new Position(5, 3), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[0].setImage(loadImage(colour + "King"));
+            chessPieceSet.toArray(new ChessPiece[8])[4].setImage(loadImage(colour + "King"));
         }
         else if ("black".equals(colour.toLowerCase())) {
             chessPieceSet.add(new King("King", new Position(0, 0), colour));
-            chessPieceSet.toArray(new ChessPiece[8])[0].setImage(loadImage(colour + "King"));
+            chessPieceSet.toArray(new ChessPiece[8])[4].setImage(loadImage(colour + "King"));
         }
     }
 

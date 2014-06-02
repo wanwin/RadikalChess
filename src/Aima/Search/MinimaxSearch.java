@@ -28,10 +28,8 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         int currentDepth = 0;
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
-        for (ACTION action : game.getActions(state, allPieces)) {
-            double value = minValue(game.getResult(state, action, 
-                    allPieces), cloneAllPieces(allPieces), 
-                    currentDepth);
+        for (ACTION action : game.getActions(state)) {
+            double value = minValue(game.getResult(state, action), currentDepth);
             if (value > resultValue) {
                 result = action;
                 resultValue = value;
@@ -41,13 +39,13 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         return result;
     }
 
-    public double maxValue(STATE state, ArrayList<ChessPiece> allPieces, int currentDepth) {
+    public double maxValue(STATE state, int currentDepth) {
         expandedNodes++;
         currentDepth++;
-        if (game.isTerminal(allPieces)) {
+        if (game.isTerminal(state)) {
             return game.getUtility(state);
         }
-        if (currentDepth > 3) {
+        if (currentDepth > 7) {
             if (((RadikalChessState)state).getPlayer().getPlayerName().equals("Black"))
                 ((RadikalChessState)state).getPlayer().setPlayer("White");
             else
@@ -55,21 +53,20 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
             return game.getUtility(state);
         }
         double value = Double.NEGATIVE_INFINITY;
-        for (ACTION action : game.getActions(state, allPieces)) {
+        for (ACTION action : game.getActions(state)) {
             value = Math.max(value,
-                    minValue(game.getResult(state, action, allPieces),
-                    cloneAllPieces(allPieces), currentDepth));
+                    minValue(game.getResult(state, action), currentDepth));
         }
         return value;
     }
 
-    public double minValue(STATE state, ArrayList<ChessPiece> allPieces, int currentDepth) {
+    public double minValue(STATE state, int currentDepth) {
         expandedNodes++;
         currentDepth++;
-        if (game.isTerminal(allPieces)) {
+        if (game.isTerminal(state)) {
             return game.getUtility(state);
         }
-        if (currentDepth > 3) {
+        if (currentDepth > 7) {
             if (((RadikalChessState)state).getPlayer().getPlayerName().equals("Black"))
                 ((RadikalChessState)state).getPlayer().setPlayer("White");
             else
@@ -77,10 +74,9 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
             return game.getUtility(state);
         }
         double value = Double.POSITIVE_INFINITY;
-        for (ACTION action : game.getActions(state, allPieces)) {
+        for (ACTION action : game.getActions(state)) {
             value = Math.min(value,
-                    maxValue(game.getResult(state, action, allPieces),
-                    cloneAllPieces(allPieces), currentDepth));
+                    maxValue(game.getResult(state, action), currentDepth));
         }
         return value;
     }
@@ -95,13 +91,5 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
     @Override
     public int getTotalExpandedNodes() {
         return totalExpandedNodes;
-    }
-    
-    private ArrayList<ChessPiece> cloneAllPieces(ArrayList<ChessPiece> allPieces){
-        ArrayList<ChessPiece> copy = new ArrayList<>();
-        for (ChessPiece chessPiece : allPieces) {
-            copy.add(chessPiece.clone());
-        }
-        return copy;
     }
 }

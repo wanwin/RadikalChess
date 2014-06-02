@@ -5,7 +5,7 @@ import Model.Position;
 
 public class King extends ChessPiece {
 
-    private final double value = 100;
+    private final int value = 40000;
 
     public King(String name, Position position, String colour) {
         super(name, position, colour);
@@ -20,6 +20,6 @@ public class King extends ChessPiece {
 
     @Override
     public int getValue() {
-        return (int) value;
+        return value;
     }
 }

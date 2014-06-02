@@ -172,15 +172,15 @@ public class MainFrame extends JFrame {
         proposeMove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!radikalChessGame.isTerminal(allChessPieces)) {
+                if (!radikalChessGame.isTerminal(currentState)) {
                     AdversarialSearch<RadikalChessState, Movement> search;
                     Movement action;
                     search = MinimaxSearch.createFor(radikalChessGame);
                     Player actualPlayer = new Player(currentState.getPlayer().getPlayerName());
                     action = search.makeDecision(currentState, allChessPieces);
                     currentState.setPlayer(actualPlayer);
-                    currentState.possibleMove(action, allChessPieces);
-                    boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()), allChessPieces);
+                    currentState.mark(action);
+                    boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()));
                     try {
                         boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()),
                                 allChessPieces,
@@ -215,13 +215,13 @@ public class MainFrame extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         Object source = e.getSource();
                         if (source instanceof CellButton) {
-                            if (!radikalChessGame.isTerminal(allChessPieces)) {
+                            if (!radikalChessGame.isTerminal(currentState)) {
                                 if (buttonPressed) {
                                     secondClicked = (CellButton) e.getSource();
                                     if (!firstClicked.getCell().getPosition().equals(
                                             secondClicked.getCell().getPosition())) {
-                                        if (currentState.possibleMove(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces)) {
-                                            boardPanel.updateChessPiece(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces);
+                                        if (currentState.possibleMove(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()))) {
+                                            boardPanel.updateChessPiece(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()));
                                         }
                                         try {
                                             boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces,

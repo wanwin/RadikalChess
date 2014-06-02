@@ -26,8 +26,7 @@ public class ChessBoardPanel extends JPanel {
         return cellPanel;
     }
 
-    public void updateChessPiece(Movement movement,
-        ArrayList<ChessPiece> allPieces) {
+    public void updateChessPiece(Movement movement) {
         destinationCellButton(movement).addPiece(originCellButton(movement));
         originCellButton(movement).removePiece(); 
     }
