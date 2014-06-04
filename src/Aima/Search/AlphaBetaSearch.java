@@ -2,8 +2,6 @@ package Aima.Search;
 
 import Aima.Game;
 import Aima.Metrics;
-import Model.ChessPiece;
-import java.util.ArrayList;
 
 
 public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
@@ -23,7 +21,7 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     }
 
     @Override
-    public ACTION makeDecision(STATE state, ArrayList<ChessPiece> allPieces) {
+    public ACTION makeDecision(STATE state) {
         expandedNodes = 0;
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
@@ -43,7 +41,7 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     public double maxValue(STATE state, PLAYER player, double alpha, double beta) {
         expandedNodes++;
         if (game.isTerminal(state)) {
-            return game.getUtility(state);
+            return game.getUtility(state, player);
         }
         double value = Double.NEGATIVE_INFINITY;
         for (ACTION action : game.getActions(state)) {
@@ -60,7 +58,7 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     public double minValue(STATE state, PLAYER player, double alpha, double beta) {
         expandedNodes++;
         if (game.isTerminal(state)) {
-            return game.getUtility(state);
+            return game.getUtility(state, player);
         }
         double value = Double.POSITIVE_INFINITY;
         for (ACTION action : game.getActions(state)) {

@@ -9,5 +9,5 @@ public interface Game<STATE, ACTION, PLAYER> {
 	List<ACTION> getActions(STATE state);
 	STATE getResult(STATE state, ACTION action);
 	boolean isTerminal(STATE state);
-	double getUtility(STATE state);
+	double getUtility(STATE state, PLAYER player);
 }

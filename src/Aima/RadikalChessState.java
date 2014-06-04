@@ -56,25 +56,10 @@ public class RadikalChessState implements Cloneable {
     }
 
     public void mark(Movement movement) {
-        if (originCell(movement).getChessPiece().getColour().equals(player.getPlayerName())) {
-            if (destinationCell(movement).getChessPiece() != null) {
-                originCell(movement).getChessPiece().setPosition(movement.getDestination());
-                destinationCell(movement).setChessPiece(originCell(movement).getChessPiece());
-                originCell(movement).setChessPiece(null);
-                player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
-            }
-            if (destinationCell(movement).getChessPiece() == null) {
-                if (!isEuclideanDistanceReduced(movement.getOrigin(), movement.getDestination())
-                        && !(originCell(movement).getChessPiece() instanceof Pawn)) {
-                    return;
-                }
-                originCell(movement).getChessPiece().setPosition(movement.getDestination());
-                destinationCell(movement).setChessPiece(originCell(movement).getChessPiece());
-                originCell(movement).setChessPiece(null);
-                player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
-            }
-
-        }
+        originCell(movement).getChessPiece().setPosition(movement.getDestination());
+        destinationCell(movement).setChessPiece(originCell(movement).getChessPiece());
+        originCell(movement).setChessPiece(null);
+        player.setPlayer((player.getPlayerName().equals("White")) ? "Black" : "White");
     }
 
     public Player getPlayer() {
@@ -101,12 +86,12 @@ public class RadikalChessState implements Cloneable {
         return (destination.calculateEuclideanDistance(chessBoard, player.getPlayerName())
                 < origin.calculateEuclideanDistance(chessBoard, player.getPlayerName()));
     }
-
-    private Cell originCell(Movement movement) {
+    
+    public Cell originCell(Movement movement) {
         return chessBoard.getCell()[movement.getOrigin().getRow()][movement.getOrigin().getColumn()];
     }
 
-    private Cell destinationCell(Movement movement) {
+    public Cell destinationCell(Movement movement) {
         return chessBoard.getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()];
     }
 }

@@ -49,4 +49,9 @@ public abstract class ChessPiece {
     public abstract ChessPiece clone();
 
     public abstract int getValue();
+
+    @Override
+    public String toString() {
+        return name+" "+colour;
+    }
 }

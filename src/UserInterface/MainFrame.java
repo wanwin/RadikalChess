@@ -177,7 +177,7 @@ public class MainFrame extends JFrame {
                     Movement action;
                     search = MinimaxSearch.createFor(radikalChessGame);
                     Player actualPlayer = new Player(currentState.getPlayer().getPlayerName());
-                    action = search.makeDecision(currentState, allChessPieces);
+                    action = search.makeDecision(currentState);
                     currentState.setPlayer(actualPlayer);
                     currentState.mark(action);
                     boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()));
@@ -204,7 +204,7 @@ public class MainFrame extends JFrame {
     public void createCellButton() {
         boolean blackFirst = true;
         for (int i = 0; i < row; i++) {
-            for (int j = 0; j < column; j++){
+            for (int j = 0; j < column; j++) {
                 CellButton cell = new CellButton(null, new Position(i, j));
                 paintCell(blackFirst, j, cell);
                 boardPanel.getBoard()[i][j] = cell;
@@ -271,11 +271,11 @@ public class MainFrame extends JFrame {
     }
 
     private void loadImages() {
-        for (ChessPiece chessPiece : whiteChessPieces){
+        for (ChessPiece chessPiece : whiteChessPieces) {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
                     convertImageToImageIcon(chessPiece.getImage()));
         }
-        for (ChessPiece chessPiece : blackChessPieces){
+        for (ChessPiece chessPiece : blackChessPieces) {
             boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
                     convertImageToImageIcon(chessPiece.getImage()));
         }
@@ -289,8 +289,7 @@ public class MainFrame extends JFrame {
         ChessBoard chessBoard = new ChessBoard(row, column);
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
-                chessBoard.getCell()[i][j] = new Cell(boardPanel.getBoard()[i][j].getCell().getChessPiece(),
-                        new Position(i, j));
+                chessBoard.getCell()[i][j] = new Cell(boardPanel.getBoard()[i][j].getCell().getChessPiece(), new Position(i, j));
             }
         }
         currentState = new RadikalChessState(chessBoard, player);

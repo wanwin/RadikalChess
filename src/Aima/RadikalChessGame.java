@@ -1,7 +1,6 @@
 package Aima;
 
-import Aima.Heuristic.HeuristicAttack;
-import Model.ChessPiece;
+import Aima.Heuristic.MediumHeuristic;
 import Model.Movement;
 import Model.PieceMoveRange;
 import Model.Player;
@@ -22,7 +21,8 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
         ArrayList<Movement> actions = new ArrayList<>();
         for (int i = 0; i < state.getChessBoard().getRow(); i++) {
             for (int j = 0; j < state.getChessBoard().getColumn(); j++){
-                if (state.getChessBoard().getCell()[i][j].getChessPiece() != null)
+                if (state.getChessBoard().getCell()[i][j].getChessPiece() != null 
+                        && state.getChessBoard().getCell()[i][j].getChessPiece().getColour().equals(state.getPlayer().getPlayerName()))
                  actions.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), state));   
             }
         }
@@ -62,8 +62,8 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     }
 
     @Override
-    public double getUtility(RadikalChessState state) {
-        HeuristicAttack heuristic = new HeuristicAttack();
-        return heuristic.getHeuristic(state);
+    public double getUtility(RadikalChessState state, Player player) {
+        MediumHeuristic heuristic = new MediumHeuristic();
+        return heuristic.getHeuristic(state, player);
     }
 }
