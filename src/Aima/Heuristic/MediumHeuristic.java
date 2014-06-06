@@ -13,15 +13,16 @@ public class MediumHeuristic extends Heuristic {
                 if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
                         && "White".equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
                     heuristic += state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
-                    if (threatenedAdversarialKing(state, player, state.getChessBoard().getCell()[i][j].getChessPiece())) {
-                        heuristic += 1000;
-                    }
+                    heuristic += threatenedAdversarialPieces(state, player, state.getChessBoard().
+                            getCell()[i][j].getChessPiece());
                 } else if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
                         && "Black".equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
                     heuristic -= state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
-                    if (threatenedAdversarialKing(state, player, state.getChessBoard().getCell()[i][j].getChessPiece())) {
-                        heuristic -= 1000;
-                    }
+                    RadikalChessState clonedState = state.clone();
+                    clonedState.setPlayer((clonedState.getPlayer().getPlayerName().equals("White"))
+                            ? new Player("Black") : new Player("White"));
+                    heuristic -= threatenedAdversarialPieces(clonedState, player,
+                            clonedState.getChessBoard().getCell()[i][j].getChessPiece());
                 }
             }
         }

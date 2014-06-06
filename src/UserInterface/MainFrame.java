@@ -15,8 +15,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
@@ -292,7 +295,7 @@ public class MainFrame extends JFrame {
     private JPanel createResult() {
         JPanel message = new JPanel();
         message.add(createNodesExpandedPanel(), FlowLayout.LEFT);
-        message.add(createNodesExaminePanel(), FlowLayout.LEFT);
+        message.add(createExplorationTimePanel(), FlowLayout.LEFT);
         message.add(createPathCostPanel(), FlowLayout.RIGHT);
         return message;
     }
@@ -307,14 +310,14 @@ public class MainFrame extends JFrame {
         return resultNodesExpanded;
     }
 
-    private JPanel createNodesExaminePanel() {
-        JPanel resultNodesExamine = new JPanel();
+    private JPanel createExplorationTimePanel() {
+        JPanel resultTime = new JPanel();
         time = new JTextField(5);
         time.setEditable(false);
-        resultNodesExamine.setLayout(new FlowLayout(FlowLayout.LEFT));
-        resultNodesExamine.add(new JLabel("Time:"));
-        resultNodesExamine.add(time);
-        return resultNodesExamine;
+        resultTime.setLayout(new FlowLayout(FlowLayout.LEFT));
+        resultTime.add(new JLabel("Time:"));
+        resultTime.add(time);
+        return resultTime;
     }
 
     private JPanel createPathCostPanel() {
@@ -346,12 +349,10 @@ public class MainFrame extends JFrame {
     }
 
     private void updateMovement(Movement movement) {
-        movements.setText(movements.getText() + numberOfMovements + ". " + currentState.getChessBoard().getCell()[movement.getDestination().getRow()]
-                [movement.getDestination().getColumn()].getChessPiece().getColour() + " " +
-                currentState.getChessBoard().getCell()[movement.getDestination().getRow()]
-                [movement.getDestination().getColumn()].getChessPiece().getName() + " from " + "[" 
-                + movement.getOrigin().getRow() + "," + movement.getOrigin().getColumn() 
-                + "] to " + "[" + movement.getDestination().getRow() + "," 
+        movements.setText(movements.getText() + numberOfMovements + ". " + currentState.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece().getColour() + " "
+                + currentState.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece().getName() + " from " + "["
+                + movement.getOrigin().getRow() + "," + movement.getOrigin().getColumn()
+                + "] to " + "[" + movement.getDestination().getRow() + ","
                 + movement.getDestination().getColumn() + "]\n");
     }
 }
