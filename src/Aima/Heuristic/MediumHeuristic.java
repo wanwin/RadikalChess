@@ -13,13 +13,13 @@ public class MediumHeuristic extends Heuristic {
                 if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
                         && "White".equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
                     heuristic += state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
-                    if (threatenedKing(state, player, state.getChessBoard().getCell()[i][j].getChessPiece())) {
+                    if (threatenedAdversarialKing(state, player, state.getChessBoard().getCell()[i][j].getChessPiece())) {
                         heuristic += 1000;
                     }
                 } else if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
                         && "Black".equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
                     heuristic -= state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
-                    if (threatenedKing(state, player, state.getChessBoard().getCell()[i][j].getChessPiece())) {
+                    if (threatenedAdversarialKing(state, player, state.getChessBoard().getCell()[i][j].getChessPiece())) {
                         heuristic -= 1000;
                     }
                 }

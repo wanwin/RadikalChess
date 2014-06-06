@@ -71,7 +71,7 @@ public class RadikalChessState implements Cloneable {
     }
 
     @Override
-    protected RadikalChessState clone() {
+    public RadikalChessState clone() {
         RadikalChessState copy = null;
         try {
             copy = (RadikalChessState) super.clone();

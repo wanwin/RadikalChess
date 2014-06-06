@@ -10,6 +10,7 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     Game<STATE, ACTION, PLAYER> game;
     private int expandedNodes;
     private static int totalExpandedNodes;
+    private double time;
 
     public static <STATE, ACTION, PLAYER> AlphaBetaSearch<STATE, ACTION, PLAYER> createFor(
             Game<STATE, ACTION, PLAYER> game) {
@@ -82,5 +83,15 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     @Override
     public int getTotalExpandedNodes() {
         return totalExpandedNodes;
+    }
+    
+    @Override
+    public double getTime() {
+        return time;
+    }
+    
+    @Override
+    public int getExpandedNodes() {
+        return expandedNodes;
     }
 }

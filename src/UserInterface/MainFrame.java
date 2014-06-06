@@ -13,6 +13,7 @@ import Model.Player;
 import Model.Position;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,19 +26,27 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class MainFrame extends JFrame {
 
     private final ArrayList<ChessPiece> whiteChessPieces, blackChessPieces, allChessPieces;
     private int row = 6;
     private int column = 4;
+    private int numberOfMovementsSearch = 0;
+    private int numberOfMovements = 0;
     private boolean buttonPressed;
     private ChessBoardPanel boardPanel;
     private CellButton firstClicked;
     private Player player = new Player("White");
     private RadikalChessState currentState;
     private RadikalChessGame radikalChessGame = new RadikalChessGame();
+    private JTextField nodesExpanded, time, pathCost;
+    private JTextArea movements;
 
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
             ArrayList<ChessPiece> blackChessPieces,
@@ -56,15 +65,15 @@ public class MainFrame extends JFrame {
 
     private void createComponent() {
         this.add(createToolbar(), BorderLayout.NORTH);
-        this.add(createBoardPanel(), BorderLayout.SOUTH);
+        this.add(createBoardPanel(), BorderLayout.CENTER);
+        this.add(createMovementsPanel(), BorderLayout.EAST);
+        this.add(createResult(), BorderLayout.SOUTH);
     }
 
     private JPanel createToolbar() {
         JPanel panel = new JPanel();
         panel.add(createDifficulty());
-        panel.add(createBoardSize());
         panel.add(createAlgorithm());
-        panel.add(createPlayButton());
         panel.add(createResetButton());
         panel.add(createProposeMoveButton());
         return panel;
@@ -88,39 +97,6 @@ public class MainFrame extends JFrame {
             }
         });
         return difficulty;
-    }
-
-    private JComboBox createBoardSize() {
-        final JComboBox size = new JComboBox(new String[]{"Size=6x4", "Size=8x6", "Size=10x8", "Size=12x10"});
-        size.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() != ItemEvent.SELECTED) {
-                    return;
-                }
-                if (size.getSelectedItem().equals("Size=6x4")) {
-                    setRow(6);
-                    setColumn(4);
-                    createBoardPanel();
-                }
-                if (size.getSelectedItem().equals("Size=8x6")) {
-                    setRow(8);
-                    setColumn(6);
-                    createBoardPanel();
-                }
-                if (size.getSelectedItem().equals("Size=10x8")) {
-                    setRow(10);
-                    setColumn(8);
-                    createBoardPanel();
-                }
-                if (size.getSelectedItem().equals("Size=12x10")) {
-                    setRow(12);
-                    setColumn(10);
-                    createBoardPanel();
-                }
-            }
-        });
-        return size;
     }
 
     public int getRow() {
@@ -157,11 +133,6 @@ public class MainFrame extends JFrame {
         return algorithm;
     }
 
-    private JButton createPlayButton() {
-        JButton play = new JButton("Play");
-        return play;
-    }
-
     private JButton createResetButton() {
         JButton reset = new JButton("Reset");
         return reset;
@@ -180,7 +151,11 @@ public class MainFrame extends JFrame {
                     action = search.makeDecision(currentState);
                     currentState.setPlayer(actualPlayer);
                     currentState.mark(action);
+                    numberOfMovementsSearch++;
+                    numberOfMovements++;
                     boardPanel.updateChessPiece(createMovement(action.getOrigin(), action.getDestination()));
+                    updateStatistics(search);
+                    updateMovement(action);
                     try {
                         boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()),
                                 allChessPieces,
@@ -191,6 +166,19 @@ public class MainFrame extends JFrame {
             }
         });
         return proposeMove;
+    }
+
+    private JPanel createMovementsPanel() {
+        JPanel movementsPanel = new JPanel();
+        movements = new JTextArea(26, 26);
+        movements.setLineWrap(true);
+        movements.setWrapStyleWord(true);
+        movements.setEditable(false);
+        movements.setText("Historial of moves [Row, Column]:\n");
+        JScrollPane scrollPane = new JScrollPane(movements);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        movementsPanel.add(scrollPane);
+        return movementsPanel;
     }
 
     private ChessBoardPanel createBoardPanel() {
@@ -222,6 +210,8 @@ public class MainFrame extends JFrame {
                                             secondClicked.getCell().getPosition())) {
                                         if (currentState.possibleMove(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()))) {
                                             boardPanel.updateChessPiece(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()));
+                                            numberOfMovements++;
+                                            updateMovement(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()));
                                         }
                                         try {
                                             boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces,
@@ -297,5 +287,71 @@ public class MainFrame extends JFrame {
 
     private Movement createMovement(Position origin, Position destination) {
         return new Movement(origin, destination);
+    }
+
+    private JPanel createResult() {
+        JPanel message = new JPanel();
+        message.add(createNodesExpandedPanel(), FlowLayout.LEFT);
+        message.add(createNodesExaminePanel(), FlowLayout.LEFT);
+        message.add(createPathCostPanel(), FlowLayout.RIGHT);
+        return message;
+    }
+
+    private JPanel createNodesExpandedPanel() {
+        JPanel resultNodesExpanded = new JPanel();
+        nodesExpanded = new JTextField(5);
+        nodesExpanded.setEditable(false);
+        resultNodesExpanded.setLayout(new FlowLayout(FlowLayout.LEFT));
+        resultNodesExpanded.add(new JLabel("Number of expanded nodes:"));
+        resultNodesExpanded.add(nodesExpanded);
+        return resultNodesExpanded;
+    }
+
+    private JPanel createNodesExaminePanel() {
+        JPanel resultNodesExamine = new JPanel();
+        time = new JTextField(5);
+        time.setEditable(false);
+        resultNodesExamine.setLayout(new FlowLayout(FlowLayout.LEFT));
+        resultNodesExamine.add(new JLabel("Time:"));
+        resultNodesExamine.add(time);
+        return resultNodesExamine;
+    }
+
+    private JPanel createPathCostPanel() {
+        JPanel resultPathCost = new JPanel();
+        pathCost = new JTextField(3);
+        pathCost.setEditable(false);
+        resultPathCost.setLayout(new FlowLayout(FlowLayout.LEFT));
+        resultPathCost.add(new JLabel("Number of movements:"));
+        resultPathCost.add(pathCost);
+        return resultPathCost;
+    }
+
+    private void updateStatistics(AdversarialSearch<RadikalChessState, Movement> search) {
+        updateNodesExpanded(search);
+        updateTime(search);
+        updatePathCost();
+    }
+
+    private void updateNodesExpanded(AdversarialSearch<RadikalChessState, Movement> search) {
+        nodesExpanded.setText(String.valueOf(search.getExpandedNodes()));
+    }
+
+    private void updateTime(AdversarialSearch<RadikalChessState, Movement> search) {
+        time.setText(String.valueOf(search.getTime() + " ms"));
+    }
+
+    private void updatePathCost() {
+        pathCost.setText(String.valueOf(numberOfMovementsSearch));
+    }
+
+    private void updateMovement(Movement movement) {
+        movements.setText(movements.getText() + numberOfMovements + ". " + currentState.getChessBoard().getCell()[movement.getDestination().getRow()]
+                [movement.getDestination().getColumn()].getChessPiece().getColour() + " " +
+                currentState.getChessBoard().getCell()[movement.getDestination().getRow()]
+                [movement.getDestination().getColumn()].getChessPiece().getName() + " from " + "[" 
+                + movement.getOrigin().getRow() + "," + movement.getOrigin().getColumn() 
+                + "] to " + "[" + movement.getDestination().getRow() + "," 
+                + movement.getDestination().getColumn() + "]\n");
     }
 }

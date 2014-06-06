@@ -12,6 +12,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
     private int expandedNodes;
     private static int totalExpandedNodes;
     private static int turn = 1;
+    private double time;
 
     public static <STATE, ACTION, PLAYER> MinimaxSearch<STATE, ACTION, PLAYER> createFor(
             Game<STATE, ACTION, PLAYER> game) {
@@ -30,6 +31,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         double resultValue = Double.NEGATIVE_INFINITY;
         PLAYER player = game.getPlayer(state);
         System.out.println(turn + "º Vuelta");
+        double t1 = System.currentTimeMillis();
         for (ACTION action : game.getActions(state)) {
             double value = minValue(game.getResult(state, action), currentDepth, player);
             if (value > resultValue) {
@@ -38,6 +40,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
             }
             System.out.println(((RadikalChessState) state).originCell((Movement) action).getChessPiece().toString() + " " + value);
         }
+        time = System.currentTimeMillis() - t1;
         turn++;
         System.out.println("");
         totalExpandedNodes += expandedNodes;
@@ -82,5 +85,15 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
     @Override
     public int getTotalExpandedNodes() {
         return totalExpandedNodes;
+    }
+
+    @Override
+    public double getTime() {
+        return time;
+    }
+    
+    @Override
+    public int getExpandedNodes() {
+        return expandedNodes;
     }
 }
