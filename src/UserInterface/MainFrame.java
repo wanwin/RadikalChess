@@ -15,11 +15,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
@@ -38,8 +35,10 @@ import javax.swing.JTextField;
 public class MainFrame extends JFrame {
 
     private final ArrayList<ChessPiece> whiteChessPieces, blackChessPieces, allChessPieces;
-    private int row = 6;
-    private int column = 4;
+    private int row = 8;
+    private int column = 6;
+    private int offsetRow = row - 6;
+    private int offsetColumn = column - 4;
     private int numberOfMovementsSearch = 0;
     private int numberOfMovements = 0;
     private boolean buttonPressed;
@@ -62,6 +61,7 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.createComponent();
         fillBoard();
+        setChessPiecePosition();
         this.pack();
         this.setLocationRelativeTo(null);
     }
@@ -163,7 +163,8 @@ public class MainFrame extends JFrame {
                         boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()),
                                 allChessPieces,
                                 currentState);
-                    } catch (IOException ex) {
+                    }
+                    catch (IOException ex) {
                     }
                 }
             }
@@ -219,11 +220,13 @@ public class MainFrame extends JFrame {
                                         try {
                                             boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces,
                                                     currentState);
-                                        } catch (IOException ex) {
+                                        }
+                                        catch (IOException ex) {
                                         }
                                     }
                                     buttonPressed = false;
-                                } else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
+                                }
+                                else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
                                     buttonPressed = true;
                                     firstClicked = (CellButton) e.getSource();
                                 }
@@ -240,10 +243,10 @@ public class MainFrame extends JFrame {
 
     private void placePieces() {
         for (ChessPiece chessPiece : whiteChessPieces) {
-            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
+            boardPanel.getBoard()[chessPiece.getPosition().getRow() + offsetRow][chessPiece.getPosition().getColumn() + offsetColumn].getCell().setChessPiece(chessPiece);
         }
         for (ChessPiece chessPiece : blackChessPieces) {
-            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].getCell().setChessPiece(chessPiece);
+            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn() + offsetColumn].getCell().setChessPiece(chessPiece);
         }
     }
 
@@ -251,13 +254,16 @@ public class MainFrame extends JFrame {
         if (blackFirst) {
             if (j % 2 == 0) {
                 cell.setBackground(Color.DARK_GRAY);
-            } else {
+            }
+            else {
                 cell.setBackground(Color.WHITE);
             }
-        } else {
+        }
+        else {
             if (j % 2 == 0) {
                 cell.setBackground(Color.WHITE);
-            } else {
+            }
+            else {
                 cell.setBackground(Color.DARK_GRAY);
             }
         }
@@ -265,12 +271,23 @@ public class MainFrame extends JFrame {
 
     private void loadImages() {
         for (ChessPiece chessPiece : whiteChessPieces) {
-            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
+            boardPanel.getBoard()[chessPiece.getPosition().getRow() + offsetRow][chessPiece.getPosition().getColumn() + offsetColumn].setIcon(
                     convertImageToImageIcon(chessPiece.getImage()));
         }
         for (ChessPiece chessPiece : blackChessPieces) {
-            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn()].setIcon(
+            boardPanel.getBoard()[chessPiece.getPosition().getRow()][chessPiece.getPosition().getColumn() + offsetColumn].setIcon(
                     convertImageToImageIcon(chessPiece.getImage()));
+        }
+    }
+
+    private void setChessPiecePosition() {
+        if (row > 6 || column > 4) {
+            for (ChessPiece chessPiece: whiteChessPieces) {
+                chessPiece.setPosition(new Position(chessPiece.getPosition().getRow() + offsetRow, chessPiece.getPosition().getColumn() + offsetColumn));    
+            }
+            for (ChessPiece chessPiece: blackChessPieces) {
+                chessPiece.setPosition(new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() + offsetColumn));    
+            }
         }
     }
 
@@ -349,7 +366,8 @@ public class MainFrame extends JFrame {
     }
 
     private void updateMovement(Movement movement) {
-        movements.setText(movements.getText() + numberOfMovements + ". " + currentState.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece().getColour() + " "
+        movements.setText(movements.getText() + numberOfMovements + ". "
+                + currentState.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece().getColour() + " "
                 + currentState.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece().getName() + " from " + "["
                 + movement.getOrigin().getRow() + "," + movement.getOrigin().getColumn()
                 + "] to " + "[" + movement.getDestination().getRow() + ","
