@@ -6,8 +6,8 @@ import Model.Player;
 public class EasyHeuristic extends Heuristic {
 
     @Override
-    public int getHeuristic(RadikalChessState state, Player player) {
-        int heuristic = 0;
+    public double getHeuristic(RadikalChessState state, Player player) {
+        double heuristic = 0;
         if (player.getPlayerName().equals("White")) {
             for (int i = 0; i < state.getChessBoard().getRow(); i++) {
                 for (int j = 0; j < state.getChessBoard().getColumn(); j++) {

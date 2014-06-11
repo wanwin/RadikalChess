@@ -9,15 +9,50 @@ import java.util.ArrayList;
 
 public abstract class Heuristic {
 
-    public abstract int getHeuristic(RadikalChessState state, Player player);
+    public abstract double getHeuristic(RadikalChessState state, Player player);
 
-    public int threatenedAdversarialPieces(RadikalChessState state, Player player, ChessPiece chessPiece) {
-        int threatValue = 0;
+    public double threatenedAdversarialPieces(RadikalChessState state, Player player, ChessPiece chessPiece) {
+        /*int threatValue = 0;
+         ArrayList<Movement> actions = new ArrayList<>();
+         actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, state));
+         for (Movement movement : actions) {
+         if (state.destinationCell(movement).getChessPiece() != null) {
+         threatValue += state.destinationCell(movement).getChessPiece().getValue();
+         }
+         }
+         return threatValue;*/
+        
+        double threatValue = 0;
         ArrayList<Movement> actions = new ArrayList<>();
-        actions.addAll(PieceMoveRange.getInstance().selectMove(chessPiece, state));
-        for (Movement movement : actions) {
-            if (state.destinationCell(movement).getChessPiece() != null) {
-                threatValue += state.destinationCell(movement).getChessPiece().getValue();
+        for (int i = 0; i < state.getChessBoard().getRow(); i++) {
+            for (int j = 0; j < state.getChessBoard().getColumn(); j++) {
+                if (state.getChessBoard().getCell()[i][j].getChessPiece() != null) {
+                    if (state.getChessBoard().getCell()[i][j].getChessPiece().getColour().equals(state.getPlayer().getPlayerName())) {
+                        actions.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), state));
+                        for (Movement movement : actions) {
+                            if (state.destinationCell(movement).getChessPiece() != null) {
+                                if (state.destinationCell(movement).getChessPiece().getName().equals("King")) {
+                                    return Double.POSITIVE_INFINITY;
+                                }
+                                threatValue += state.destinationCell(movement).getChessPiece().getValue();
+                            }
+                        }
+                    } else {
+                        RadikalChessState clonedState = state.clone();
+                        clonedState.setPlayer((clonedState.getPlayer().getPlayerName().equals("White"))
+                                ? new Player("Black") : new Player("White"));
+                        actions.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), clonedState));
+                        for (Movement movement : actions) {
+                            if (state.destinationCell(movement).getChessPiece() != null) {
+                                if (state.destinationCell(movement).getChessPiece().getName().equals("King")) {
+                                    return Double.NEGATIVE_INFINITY;
+                                }
+                                threatValue -= state.destinationCell(movement).getChessPiece().getValue();
+                            }
+                        }
+                    }
+                }
+                actions.clear();
             }
         }
         return threatValue;

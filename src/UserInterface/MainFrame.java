@@ -35,8 +35,8 @@ import javax.swing.JTextField;
 public class MainFrame extends JFrame {
 
     private final ArrayList<ChessPiece> whiteChessPieces, blackChessPieces, allChessPieces;
-    private int row = 8;
-    private int column = 6;
+    private int row = 6;
+    private int column = 4;
     private int offsetRow = row - 6;
     private int offsetColumn = column - 4;
     private int numberOfMovementsSearch = 0;

@@ -48,7 +48,7 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
                 }
             }
         }
-        return (numberOfKings != 2);
+        return (numberOfKings != 2 || getActions(state).isEmpty());
     }
 
     @Override
