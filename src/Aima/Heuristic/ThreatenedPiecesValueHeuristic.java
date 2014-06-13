@@ -3,7 +3,7 @@ package Aima.Heuristic;
 import Aima.RadikalChessState;
 import Model.Player;
 
-public class MediumHeuristic extends Heuristic {
+public class ThreatenedPiecesValueHeuristic extends Heuristic {
 
     @Override
     public double getHeuristic(RadikalChessState state, Player player) {

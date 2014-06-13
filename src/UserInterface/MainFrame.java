@@ -3,6 +3,7 @@ package UserInterface;
 import Aima.RadikalChessGame;
 import Aima.RadikalChessState;
 import Aima.Search.AdversarialSearch;
+import Aima.Search.AlphaBetaSearch;
 import Aima.Search.MinimaxSearch;
 import Model.Cell;
 import Model.ChessBoard;
@@ -49,6 +50,7 @@ public class MainFrame extends JFrame {
     private RadikalChessGame radikalChessGame = new RadikalChessGame();
     private JTextField nodesExpanded, time, pathCost;
     private JTextArea movements;
+    private JComboBox algorithm;
 
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
             ArrayList<ChessPiece> blackChessPieces,
@@ -119,17 +121,11 @@ public class MainFrame extends JFrame {
     }
 
     private JComboBox createAlgorithm() {
-        final JComboBox algorithm = new JComboBox(new String[]{"MinimaxSearch", "AlphaBetaSearch"});
+        algorithm = new JComboBox(new String[]{"MinimaxSearch", "AlphaBetaSearch"});
         algorithm.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() != ItemEvent.SELECTED) {
-                    return;
-                }
-                if (algorithm.getSelectedItem().equals("MinimaxSearch")) {
-                    if (algorithm.getSelectedItem().equals("AlphaBetaSearch")) {
-                        return;
-                    }
                 }
             }
         });
@@ -147,9 +143,14 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!radikalChessGame.isTerminal(currentState)) {
+                    algorithm.setEnabled(false);
                     AdversarialSearch<RadikalChessState, Movement> search;
                     Movement action;
-                    search = MinimaxSearch.createFor(radikalChessGame);
+                    if (algorithm.getSelectedIndex() == 0) {
+                        search = MinimaxSearch.createFor(radikalChessGame);
+                    } else {
+                        search = AlphaBetaSearch.createFor(radikalChessGame);
+                    }
                     Player actualPlayer = new Player(currentState.getPlayer().getPlayerName());
                     action = search.makeDecision(currentState);
                     currentState.setPlayer(actualPlayer);
@@ -163,8 +164,7 @@ public class MainFrame extends JFrame {
                         boardPanel.checkPromotionedPawn(createMovement(action.getOrigin(), action.getDestination()),
                                 allChessPieces,
                                 currentState);
-                    }
-                    catch (IOException ex) {
+                    } catch (IOException ex) {
                     }
                 }
             }
@@ -220,13 +220,11 @@ public class MainFrame extends JFrame {
                                         try {
                                             boardPanel.checkPromotionedPawn(createMovement(firstClicked.getCell().getPosition(), secondClicked.getCell().getPosition()), allChessPieces,
                                                     currentState);
-                                        }
-                                        catch (IOException ex) {
+                                        } catch (IOException ex) {
                                         }
                                     }
                                     buttonPressed = false;
-                                }
-                                else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
+                                } else if (((CellButton) e.getSource()).getCell().getChessPiece() != null) {
                                     buttonPressed = true;
                                     firstClicked = (CellButton) e.getSource();
                                 }
@@ -254,16 +252,13 @@ public class MainFrame extends JFrame {
         if (blackFirst) {
             if (j % 2 == 0) {
                 cell.setBackground(Color.DARK_GRAY);
-            }
-            else {
+            } else {
                 cell.setBackground(Color.WHITE);
             }
-        }
-        else {
+        } else {
             if (j % 2 == 0) {
                 cell.setBackground(Color.WHITE);
-            }
-            else {
+            } else {
                 cell.setBackground(Color.DARK_GRAY);
             }
         }
@@ -282,11 +277,11 @@ public class MainFrame extends JFrame {
 
     private void setChessPiecePosition() {
         if (row > 6 || column > 4) {
-            for (ChessPiece chessPiece: whiteChessPieces) {
-                chessPiece.setPosition(new Position(chessPiece.getPosition().getRow() + offsetRow, chessPiece.getPosition().getColumn() + offsetColumn));    
+            for (ChessPiece chessPiece : whiteChessPieces) {
+                chessPiece.setPosition(new Position(chessPiece.getPosition().getRow() + offsetRow, chessPiece.getPosition().getColumn() + offsetColumn));
             }
-            for (ChessPiece chessPiece: blackChessPieces) {
-                chessPiece.setPosition(new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() + offsetColumn));    
+            for (ChessPiece chessPiece : blackChessPieces) {
+                chessPiece.setPosition(new Position(chessPiece.getPosition().getRow(), chessPiece.getPosition().getColumn() + offsetColumn));
             }
         }
     }
@@ -329,7 +324,7 @@ public class MainFrame extends JFrame {
 
     private JPanel createExplorationTimePanel() {
         JPanel resultTime = new JPanel();
-        time = new JTextField(5);
+        time = new JTextField(6);
         time.setEditable(false);
         resultTime.setLayout(new FlowLayout(FlowLayout.LEFT));
         resultTime.add(new JLabel("Time:"));

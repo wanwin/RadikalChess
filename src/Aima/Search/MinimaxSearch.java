@@ -34,7 +34,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         double t1 = System.currentTimeMillis();
         for (ACTION action : game.getActions(state)) {
             double value = minValue(game.getResult(state, action), currentDepth, player);
-            if (value > resultValue) {
+            if (value >= resultValue) {
                 result = action;
                 resultValue = value;
             }

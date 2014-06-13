@@ -1,6 +1,6 @@
 package Aima;
 
-import Aima.Heuristic.MediumHeuristic;
+import Aima.Heuristic.ThreatenedPiecesValueHeuristic;
 import Model.Movement;
 import Model.PieceMoveRange;
 import Model.Player;
@@ -63,7 +63,7 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
 
     @Override
     public double getUtility(RadikalChessState state, Player player) {
-        MediumHeuristic heuristic = new MediumHeuristic();
+        ThreatenedPiecesValueHeuristic heuristic = new ThreatenedPiecesValueHeuristic();
         return heuristic.getHeuristic(state, player);
     }
 }

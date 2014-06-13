@@ -2,6 +2,8 @@ package Aima.Search;
 
 import Aima.Game;
 import Aima.Metrics;
+import Aima.RadikalChessState;
+import Model.Movement;
 
 
 public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
@@ -11,6 +13,8 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     private int expandedNodes;
     private static int totalExpandedNodes;
     private double time;
+    private int currentDepth;
+    private static int turn = 1;
 
     public static <STATE, ACTION, PLAYER> AlphaBetaSearch<STATE, ACTION, PLAYER> createFor(
             Game<STATE, ACTION, PLAYER> game) {
@@ -24,24 +28,31 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     @Override
     public ACTION makeDecision(STATE state) {
         expandedNodes = 0;
+        currentDepth = 0;
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
         PLAYER player = game.getPlayer(state);
+        System.out.println(turn + "º Vuelta");
+        double t1 = System.currentTimeMillis();
         for (ACTION action : game.getActions(state)) {
             double value = minValue(game.getResult(state, action), player,
                     Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-            if (value > resultValue) {
+            if (value >= resultValue) {
                 result = action;
                 resultValue = value;
             }
+            System.out.println(((RadikalChessState) state).originCell((Movement) action).getChessPiece().toString() + " " + value);
         }
+        time = System.currentTimeMillis() - t1;
+        turn++;
         totalExpandedNodes += expandedNodes;
         return result;
     }
 
     public double maxValue(STATE state, PLAYER player, double alpha, double beta) {
         expandedNodes++;
-        if (game.isTerminal(state)) {
+        currentDepth++;
+        if (game.isTerminal(state) || currentDepth > 4) {
             return game.getUtility(state, player);
         }
         double value = Double.NEGATIVE_INFINITY;
@@ -58,7 +69,8 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
 
     public double minValue(STATE state, PLAYER player, double alpha, double beta) {
         expandedNodes++;
-        if (game.isTerminal(state)) {
+        currentDepth++;
+        if (game.isTerminal(state) || currentDepth > 4) {
             return game.getUtility(state, player);
         }
         double value = Double.POSITIVE_INFINITY;
