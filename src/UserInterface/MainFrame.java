@@ -14,6 +14,8 @@ import Model.Player;
 import Model.Position;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -30,6 +32,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -42,6 +45,7 @@ public class MainFrame extends JFrame {
     private int offsetColumn = column - 4;
     private int numberOfMovementsSearch = 0;
     private int numberOfMovements = 0;
+    private int difficulty;
     private boolean buttonPressed;
     private ChessBoardPanel boardPanel;
     private CellButton firstClicked;
@@ -50,7 +54,7 @@ public class MainFrame extends JFrame {
     private RadikalChessGame radikalChessGame = new RadikalChessGame();
     private JTextField nodesExpanded, time, pathCost;
     private JTextArea movements;
-    private JComboBox algorithm;
+    private JComboBox algorithm, difficultyButton;
 
     public MainFrame(ArrayList<ChessPiece> whiteChessPieces,
             ArrayList<ChessPiece> blackChessPieces,
@@ -62,6 +66,7 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.createComponent();
+        this.createSplitPane();
         fillBoard();
         setChessPiecePosition();
         this.pack();
@@ -70,8 +75,6 @@ public class MainFrame extends JFrame {
 
     private void createComponent() {
         this.add(createToolbar(), BorderLayout.NORTH);
-        this.add(createBoardPanel(), BorderLayout.CENTER);
-        this.add(createMovementsPanel(), BorderLayout.EAST);
         this.add(createResult(), BorderLayout.SOUTH);
     }
 
@@ -85,25 +88,34 @@ public class MainFrame extends JFrame {
     }
 
     private JComboBox createDifficulty() {
-        final JComboBox difficulty = new JComboBox(new String[]{"Easy", "Medium", "Hard"});
-        difficulty.addItemListener(new ItemListener() {
+        difficultyButton = new JComboBox(new String[]{"Easy", "Medium", "Hard"});
+        difficultyButton.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() != ItemEvent.SELECTED) {
                     return;
                 }
-                if (difficulty.getSelectedItem().equals("Easy")) {
-                    if (difficulty.getSelectedItem().equals("Medium")) {
-                        if (difficulty.getSelectedItem().equals("Hard")) {
-                            return;
-                        }
-                    }
-                }
             }
         });
-        return difficulty;
+        return difficultyButton;
     }
-
+    
+    private void createSplitPane() {
+        JSplitPane split=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+                createBoardPanel(), createScrollPane());
+        split.setResizeWeight(1);
+        split.setDividerLocation(320);
+        split.setEnabled(false);
+        this.getContentPane().add(split);
+    }
+    
+    private JScrollPane createScrollPane() {
+        JScrollPane scroll=new JScrollPane(createActionsPanel());
+        scroll.setBounds(30, 30, 200, 200);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        return scroll;
+    }
+    
     public int getRow() {
         return row;
     }
@@ -136,7 +148,8 @@ public class MainFrame extends JFrame {
         JButton reset = new JButton("Reset");
         return reset;
     }
-
+    
+    
     private JButton createProposeMoveButton() {
         JButton proposeMove = new JButton("Propose Move");
         proposeMove.addActionListener(new ActionListener() {
@@ -144,12 +157,19 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (!radikalChessGame.isTerminal(currentState)) {
                     algorithm.setEnabled(false);
+                    difficultyButton.setEnabled(false);
                     AdversarialSearch<RadikalChessState, Movement> search;
                     Movement action;
+                    if (difficultyButton.getSelectedIndex() == 0)
+                        difficulty = 2;
+                    else if (difficultyButton.getSelectedIndex() == 1)
+                        difficulty = 3;
+                    else
+                        difficulty = 4;
                     if (algorithm.getSelectedIndex() == 0) {
-                        search = MinimaxSearch.createFor(radikalChessGame);
+                        search = MinimaxSearch.createFor(radikalChessGame, difficulty);
                     } else {
-                        search = AlphaBetaSearch.createFor(radikalChessGame);
+                        search = AlphaBetaSearch.createFor(radikalChessGame, difficulty);
                     }
                     Player actualPlayer = new Player(currentState.getPlayer().getPlayerName());
                     action = search.makeDecision(currentState);
@@ -172,17 +192,13 @@ public class MainFrame extends JFrame {
         return proposeMove;
     }
 
-    private JPanel createMovementsPanel() {
-        JPanel movementsPanel = new JPanel();
-        movements = new JTextArea(26, 26);
+    private JTextArea createActionsPanel() {
+        movements = new JTextArea("Historial of moves [Row, Column]:\n");
         movements.setLineWrap(true);
         movements.setWrapStyleWord(true);
         movements.setEditable(false);
-        movements.setText("Historial of moves [Row, Column]:\n");
-        JScrollPane scrollPane = new JScrollPane(movements);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        movementsPanel.add(scrollPane);
-        return movementsPanel;
+        movements.setMinimumSize(new Dimension(400,400));
+        return movements;
     }
 
     private ChessBoardPanel createBoardPanel() {

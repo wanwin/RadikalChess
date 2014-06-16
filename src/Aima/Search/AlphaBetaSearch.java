@@ -11,13 +11,14 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
 
     Game<STATE, ACTION, PLAYER> game;
     private int expandedNodes;
-    private static int totalExpandedNodes;
+    private static int totalExpandedNodes, maxDepth;
     private double time;
     private int currentDepth;
     private static int turn = 1;
 
     public static <STATE, ACTION, PLAYER> AlphaBetaSearch<STATE, ACTION, PLAYER> createFor(
-            Game<STATE, ACTION, PLAYER> game) {
+            Game<STATE, ACTION, PLAYER> game, int difficulty) {
+        maxDepth = difficulty;
         return new AlphaBetaSearch<STATE, ACTION, PLAYER>(game);
     }
 
@@ -37,7 +38,7 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
         for (ACTION action : game.getActions(state)) {
             double value = minValue(game.getResult(state, action), player,
                     Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-            if (value >= resultValue) {
+            if (value > resultValue) {
                 result = action;
                 resultValue = value;
             }
@@ -52,7 +53,7 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     public double maxValue(STATE state, PLAYER player, double alpha, double beta) {
         expandedNodes++;
         currentDepth++;
-        if (game.isTerminal(state) || currentDepth > 4) {
+        if (game.isTerminal(state) || currentDepth > maxDepth) {
             return game.getUtility(state, player);
         }
         double value = Double.NEGATIVE_INFINITY;
@@ -70,7 +71,7 @@ public class AlphaBetaSearch<STATE, ACTION, PLAYER> implements
     public double minValue(STATE state, PLAYER player, double alpha, double beta) {
         expandedNodes++;
         currentDepth++;
-        if (game.isTerminal(state) || currentDepth > 4) {
+        if (game.isTerminal(state) || currentDepth > maxDepth) {
             return game.getUtility(state, player);
         }
         double value = Double.POSITIVE_INFINITY;

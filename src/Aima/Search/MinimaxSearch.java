@@ -10,12 +10,13 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
 
     private Game<STATE, ACTION, PLAYER> game;
     private int expandedNodes;
-    private static int totalExpandedNodes;
+    private static int totalExpandedNodes, maxDepth;
     private static int turn = 1;
     private double time;
 
     public static <STATE, ACTION, PLAYER> MinimaxSearch<STATE, ACTION, PLAYER> createFor(
-            Game<STATE, ACTION, PLAYER> game) {
+            Game<STATE, ACTION, PLAYER> game, int difficulty) {
+        maxDepth = difficulty;
         return new MinimaxSearch<>(game);
     }
 
@@ -34,11 +35,15 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         double t1 = System.currentTimeMillis();
         for (ACTION action : game.getActions(state)) {
             double value = minValue(game.getResult(state, action), currentDepth, player);
-            if (value >= resultValue) {
+            if (value > resultValue) {
                 result = action;
                 resultValue = value;
             }
-            System.out.println(((RadikalChessState) state).originCell((Movement) action).getChessPiece().toString() + " " + value);
+            System.out.println(((RadikalChessState) state).originCell((Movement) action).
+                    getChessPiece().toString() + " " + value);
+        }
+        if (result == null) {
+            result = game.getActions(state).get(0);
         }
         time = System.currentTimeMillis() - t1;
         turn++;
@@ -50,7 +55,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
     public double maxValue(STATE state, int currentDepth, PLAYER player) {
         expandedNodes++;
         currentDepth++;
-        if (game.isTerminal(state) || currentDepth > 4) {
+        if (game.isTerminal(state) || currentDepth > maxDepth) {
             return game.getUtility(state, player);
         }
         double value = Double.NEGATIVE_INFINITY;
@@ -64,7 +69,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
     public double minValue(STATE state, int currentDepth, PLAYER player) {
         expandedNodes++;
         currentDepth++;
-        if (game.isTerminal(state) || currentDepth > 4) {
+        if (game.isTerminal(state) || currentDepth > maxDepth) {
             return game.getUtility(state, player);
         }
         double value = Double.POSITIVE_INFINITY;
@@ -91,7 +96,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
     public double getTime() {
         return time;
     }
-    
+
     @Override
     public int getExpandedNodes() {
         return expandedNodes;
