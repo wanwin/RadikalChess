@@ -1,6 +1,5 @@
 package Aima;
 
-import Aima.Heuristic.NumberOfAttackedPiecesHeuristic;
 import Aima.Heuristic.ThreatenedPiecesValueHeuristic;
 import Model.Movement;
 import Model.PieceMoveRange;
@@ -21,10 +20,13 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     public List<Movement> getActions(RadikalChessState state) {
         ArrayList<Movement> actions = new ArrayList<>();
         for (int i = 0; i < state.getChessBoard().getRow(); i++) {
-            for (int j = 0; j < state.getChessBoard().getColumn(); j++){
-                if (state.getChessBoard().getCell()[i][j].getChessPiece() != null 
-                        && state.getChessBoard().getCell()[i][j].getChessPiece().getColour().equals(state.getPlayer().getPlayerName()))
-                 actions.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), state));   
+            for (int j = 0; j < state.getChessBoard().getColumn(); j++) {
+                if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
+                        && state.getChessBoard().getCell()[i][j].getChessPiece().getColour().
+                        equals(state.getPlayer().getPlayerName())) {
+                    actions.addAll(PieceMoveRange.getInstance().
+                            selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), state));
+                }
             }
         }
         return actions;
@@ -44,8 +46,9 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
         for (int i = 0; i < state.getChessBoard().getRow(); i++) {
             for (int j = 0; j < state.getChessBoard().getColumn(); j++) {
                 if (state.getChessBoard().getCell()[i][j].getChessPiece() != null) {
-                    if (state.getChessBoard().getCell()[i][j].getChessPiece().getName().equals("King"))
+                    if (state.getChessBoard().getCell()[i][j].getChessPiece().getName().equals("King")) {
                         numberOfKings++;
+                    }
                 }
             }
         }
@@ -65,10 +68,7 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     @Override
     public double getUtility(RadikalChessState state, Player player) {
         double result;
-        if (state.getPlayer().getPlayerName().equals("White"))
-           result = new ThreatenedPiecesValueHeuristic().getHeuristic(state, player);
-        else
-           result = new NumberOfAttackedPiecesHeuristic().getHeuristic(state, player);
+        result = new ThreatenedPiecesValueHeuristic().getHeuristic(state, player);
         return result;
     }
 }

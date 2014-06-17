@@ -69,7 +69,7 @@ public class RadikalChessState implements Cloneable {
     public void setPlayer(Player player) {
         this.player = player;
     }
-
+    
     @Override
     public RadikalChessState clone() {
         RadikalChessState copy = null;

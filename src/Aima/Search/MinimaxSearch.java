@@ -4,6 +4,7 @@ import Aima.Game;
 import Aima.Metrics;
 import Aima.RadikalChessState;
 import Model.Movement;
+import Model.Player;
 
 public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         AdversarialSearch<STATE, ACTION> {
@@ -30,7 +31,7 @@ public class MinimaxSearch<STATE, ACTION, PLAYER> implements
         int currentDepth = 0;
         ACTION result = null;
         double resultValue = Double.NEGATIVE_INFINITY;
-        PLAYER player = game.getPlayer(state);
+        PLAYER player = (PLAYER) new Player(((Player)game.getPlayer(state)).getPlayerName());
         System.out.println(turn + "º Vuelta");
         double t1 = System.currentTimeMillis();
         for (ACTION action : game.getActions(state)) {
