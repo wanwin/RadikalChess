@@ -68,12 +68,12 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
 
     @Override
     public double getUtility(RadikalChessState state, Player player) {
-        double result;
+        double result = 0;
         if (player.getPlayerName().equals("White")) {
             result = new PiecesDifferenceHeuristic().getHeuristic(state, player);
-        }
-        else
+        } else {
             result = new NumberOfAttackedPiecesHeuristic().getHeuristic(state, player);
+        }
         return result;
     }
 }

@@ -14,14 +14,10 @@ public class PiecesDifferenceHeuristic extends Heuristic {
                 if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
                         && player.getPlayerName().
                         equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
-                    if (!state.getChessBoard().getCell()[i][j].getChessPiece().getName().equals("King")) {
-                        heuristic += state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
-                    }
+                    heuristic += state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
                 } else if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
                         && player.getPlayerName().equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
-                    if (!state.getChessBoard().getCell()[i][j].getChessPiece().getName().equals("King")) {
-                        heuristic -= state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
-                    }
+                    heuristic -= state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
                 }
             }
         }

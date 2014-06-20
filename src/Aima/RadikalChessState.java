@@ -76,6 +76,7 @@ public class RadikalChessState implements Cloneable {
         try {
             copy = (RadikalChessState) super.clone();
             copy.chessBoard = chessBoard.clone();
+            copy.player = (Player) player.clone();
         }
         catch (CloneNotSupportedException e) {
         }

@@ -18,10 +18,13 @@ public class NumberOfAttackedPiecesHeuristic extends Heuristic {
                         && player.getPlayerName().
                         equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
                     ArrayList<Movement> movements = new ArrayList<>();
-                    movements.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), state));
+                    movements.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().
+                            getCell()[i][j].getChessPiece(), state));
                     for (Movement movement : movements) {
-                        if (state.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece() != null) {
-                            heuristic += state.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece().getValue();
+                        if (state.getChessBoard().getCell()[movement.getDestination().getRow()]
+                                [movement.getDestination().getColumn()].getChessPiece() != null) {
+                            heuristic += state.getChessBoard().getCell()[movement.getDestination().getRow()]
+                                    [movement.getDestination().getColumn()].getChessPiece().getValue();
                         }
                     }
                 } else if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
@@ -29,11 +32,14 @@ public class NumberOfAttackedPiecesHeuristic extends Heuristic {
                         equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
                     ArrayList<Movement> movements = new ArrayList<>();
                     Player adversarialPlayer = new Player((player.getPlayerName().equals("White")) ? "Black" : "White");
-                    RadikalChessState clonedState = new RadikalChessState(state.getChessBoard(), adversarialPlayer);
-                    movements.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), clonedState));
+                    RadikalChessState adversarialState = new RadikalChessState(state.getChessBoard(), adversarialPlayer);
+                    movements.addAll(PieceMoveRange.getInstance().selectMove(state.getChessBoard().getCell()[i][j].getChessPiece(), 
+                            adversarialState));
                     for (Movement movement : movements) {
-                        if (state.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece() != null) {
-                            heuristic -= state.getChessBoard().getCell()[movement.getDestination().getRow()][movement.getDestination().getColumn()].getChessPiece().getValue();
+                        if (state.getChessBoard().getCell()[movement.getDestination().getRow()]
+                                [movement.getDestination().getColumn()].getChessPiece() != null) {
+                            heuristic -= state.getChessBoard().getCell()[movement.getDestination().getRow()]
+                                    [movement.getDestination().getColumn()].getChessPiece().getValue();
                         }
                     }
                 }
