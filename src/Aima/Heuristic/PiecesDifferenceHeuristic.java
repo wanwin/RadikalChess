@@ -3,7 +3,7 @@ package Aima.Heuristic;
 import Aima.RadikalChessState;
 import Model.Player;
 
-public class ThreatenedPiecesValueHeuristic extends Heuristic {
+public class PiecesDifferenceHeuristic extends Heuristic {
 
     @Override
     public double getHeuristic(RadikalChessState state, Player player) {
@@ -14,11 +14,14 @@ public class ThreatenedPiecesValueHeuristic extends Heuristic {
                 if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
                         && player.getPlayerName().
                         equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
-                    heuristic += state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
+                    if (!state.getChessBoard().getCell()[i][j].getChessPiece().getName().equals("King")) {
+                        heuristic += state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
+                    }
                 } else if (state.getChessBoard().getCell()[i][j].getChessPiece() != null
-                        && player.getPlayerName().
-                        equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
-                    heuristic -= state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
+                        && player.getPlayerName().equals(state.getChessBoard().getCell()[i][j].getChessPiece().getColour())) {
+                    if (!state.getChessBoard().getCell()[i][j].getChessPiece().getName().equals("King")) {
+                        heuristic -= state.getChessBoard().getCell()[i][j].getChessPiece().getValue();
+                    }
                 }
             }
         }

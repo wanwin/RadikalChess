@@ -1,6 +1,7 @@
 package Aima;
 
-import Aima.Heuristic.ThreatenedPiecesValueHeuristic;
+import Aima.Heuristic.NumberOfAttackedPiecesHeuristic;
+import Aima.Heuristic.PiecesDifferenceHeuristic;
 import Model.Movement;
 import Model.PieceMoveRange;
 import Model.Player;
@@ -68,7 +69,11 @@ public class RadikalChessGame implements Game<RadikalChessState, Movement, Playe
     @Override
     public double getUtility(RadikalChessState state, Player player) {
         double result;
-        result = new ThreatenedPiecesValueHeuristic().getHeuristic(state, player);
+        if (player.getPlayerName().equals("White")) {
+            result = new PiecesDifferenceHeuristic().getHeuristic(state, player);
+        }
+        else
+            result = new NumberOfAttackedPiecesHeuristic().getHeuristic(state, player);
         return result;
     }
 }
