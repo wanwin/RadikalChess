@@ -2,6 +2,7 @@ package Aima.Heuristic;
 
 import Aima.RadikalChessState;
 import Model.Player;
+import java.util.Random;
 
 public class PiecesDifferenceHeuristic extends Heuristic {
 
@@ -21,6 +22,6 @@ public class PiecesDifferenceHeuristic extends Heuristic {
                 }
             }
         }
-        return heuristic;
+        return heuristic + heuristic * new Random().nextInt(5) / 100;
     }
 }

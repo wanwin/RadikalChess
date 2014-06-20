@@ -81,7 +81,6 @@ public class MainFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.add(createDifficulty());
         panel.add(createAlgorithm());
-        panel.add(createResetButton());
         panel.add(createProposeMoveButton());
         return panel;
     }
@@ -143,12 +142,6 @@ public class MainFrame extends JFrame {
         return algorithm;
     }
 
-    private JButton createResetButton() {
-        JButton reset = new JButton("Reset");
-        return reset;
-    }
-    
-    
     private JButton createProposeMoveButton() {
         JButton proposeMove = new JButton("Propose Move");
         proposeMove.addActionListener(new ActionListener() {

@@ -2,6 +2,7 @@ package Aima;
 
 import Aima.Heuristic.NumberOfAttackedPiecesHeuristic;
 import Aima.Heuristic.PiecesDifferenceHeuristic;
+import Aima.Heuristic.RandomHeuristic;
 import Model.Movement;
 import Model.PieceMoveRange;
 import Model.Player;

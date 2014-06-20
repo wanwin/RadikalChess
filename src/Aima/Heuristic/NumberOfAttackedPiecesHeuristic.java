@@ -5,6 +5,7 @@ import Model.Movement;
 import Model.PieceMoveRange;
 import Model.Player;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class NumberOfAttackedPiecesHeuristic extends Heuristic {
 
@@ -45,6 +46,6 @@ public class NumberOfAttackedPiecesHeuristic extends Heuristic {
                 }
             }
         }
-        return heuristic;
+        return heuristic + heuristic * new Random().nextInt(5) / 100;
     }
 }
