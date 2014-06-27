@@ -153,11 +153,11 @@ public class MainFrame extends JFrame {
                     AdversarialSearch<RadikalChessState, Movement> search;
                     Movement action;
                     if (difficultyButton.getSelectedIndex() == 0)
-                        difficulty = 2;
-                    else if (difficultyButton.getSelectedIndex() == 1)
                         difficulty = 3;
-                    else
+                    else if (difficultyButton.getSelectedIndex() == 1)
                         difficulty = 4;
+                    else
+                        difficulty = 5;
                     if (algorithm.getSelectedIndex() == 0) {
                         search = MinimaxSearch.createFor(radikalChessGame, difficulty);
                     } else {
@@ -179,6 +179,7 @@ public class MainFrame extends JFrame {
                     } catch (IOException ex) {
                     }
                 }
+                System.out.println();
             }
         });
         return proposeMove;
@@ -361,7 +362,7 @@ public class MainFrame extends JFrame {
     }
 
     private void updateTime(AdversarialSearch<RadikalChessState, Movement> search) {
-        time.setText(String.valueOf(search.getTime() + " ms"));
+        time.setText(String.valueOf(search.getTime() + " s"));
     }
 
     private void updatePathCost() {
